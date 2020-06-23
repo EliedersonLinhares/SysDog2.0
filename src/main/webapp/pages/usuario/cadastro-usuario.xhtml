@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:adm="http://github.com/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="title">
+        <p:outputLabel value="Cadastro de Usuario" style="font-weight:normal" rendered="#{cadastroUsuarioMB.codigoUsuario eq null}"/> 
+         <p:outputLabel value="Alteração de Usuario" style="font-weight:normal" rendered="#{cadastroUsuarioMB.codigoUsuario != null}"/>
+    </ui:define>
+     <ui:define name="head-end">
+        <style type="text/css">
+            div.ui-material {
+                margin-top: 20px;
+            }
+
+            input:-webkit-autofill {
+                -webkit-box-shadow: 0 0 0 30px white inset;
+            }
+
+
+        </style>
+    </ui:define>
+
+    <ui:define name="body">
+        <f:metadata>
+             <f:viewParam name="codigo" value="#{cadastroUsuarioMB.codigoUsuario}" converter="javax.faces.Long" />
+              <f:event listener="#{cadastroUsuarioMB.inicializar()}" type="preRenderView"></f:event>
+        </f:metadata>
+        <h:form id="form" prependId="false">
+        
+     
+            <p:focus/>
+
+			
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <div id="main-buttons" class="hidden-sm hidden-xs">
+                        <p:commandButton value="Salvar" update="@form"
+                                         action="#{cadastroUsuarioMB.salvar()}"
+                                         icon="fa fa-floppy-o" styleClass="btn-primary btn-material">
+                                        
+                                         </p:commandButton>
+                        <p:spacer width="5"/>
+
+
+                       <p:commandButton value="Desativar Conta" process="@this"    
+                                         rendered="#{cadastroUsuarioMB.usuario.edicao and cadastroUsuarioMB.usuario.ativo eq true}"
+                                         action="#{cadastroUsuarioMB.ativarDesativarConta()}"
+                                         icon="fa fa-ban"
+                                         styleClass="btn-warning btn-material">       
+                         <p:confirm header="Confirmação" message="Confirma a desativação? O usuário não podera mais acessar o sistema!" icon="pi pi-exclamation-triangle" />           
+                        </p:commandButton>
+
+                        <p:commandButton value="Reativar Conta" process="@this"    
+                                         rendered="#{cadastroUsuarioMB.usuario.edicao and cadastroUsuarioMB.usuario.ativo eq false}"
+                                         action="#{cadastroUsuarioMB.ativarDesativarConta()}"
+                                         icon="fa fa-ban"
+                                         styleClass="btn-warning btn-material">       
+                         <p:confirm header="Confirmação" message="Confirma a Reativação? O usuário poderá  acessar novamente o sistema!" icon="pi pi-exclamation-triangle" />           
+                        </p:commandButton>
+
+
+
+                     
+
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+							styleClass="box-danger box-solid">
+							<p:commandButton value="Sim" type="button"
+								styleClass="btn-material btn-primary ui-confirmdialog-yes"
+								icon="fa fa-check" />
+							<p:commandButton value="Não" type="button"
+								styleClass="btn-material btn-danger ui-confirmdialog-no"
+								icon="fa fa-close" />
+						</p:confirmDialog>
+
+
+						<p:spacer width="5"/>
+                        <p:commandButton value="Voltar" immediate="true"
+                                         action="lista-usuario?faces-redirect=true"
+                                         process="@this"
+                                        icon="fa fa-arrow-left" styleClass="btn-teal btn-material">
+                                         
+                                         </p:commandButton>
+                                         
+                    </div>
+                    
+                    <p:splitButton value="Salvar" update="@form"
+                                   icon="fa fa-floppy-o"
+                                   action="#{cadastroUsuarioMB.salvar()}"
+                                   styleClass="hidden-md hidden-lg btn-primary btn-material">
+                                   
+                       <p:menuitem>
+                        <p:commandButton value="Desativar Conta" process="@this"    
+                                         rendered="#{cadastroUsuarioMB.usuario.edicao and cadastroUsuarioMB.usuario.ativo eq true}"
+                                         action="#{cadastroUsuarioMB.ativarDesativarConta()}"
+                                         icon="fa fa-ban"
+                                         styleClass="btn-warning btn-material">       
+                         <p:confirm header="Confirmação" message="Confirma a desativação? O usuário não podera mais acessar o sistema!" icon="pi pi-exclamation-triangle" />           
+                        </p:commandButton>
+                       </p:menuitem>
+                       
+                       <p:separator  rendered="#{cadastroUsuarioMB.usuario.edicao and cadastroUsuarioMB.usuario.ativo eq true}"/>
+                       
+                      <p:menuitem>
+                            <p:commandButton value="Reativar Conta" process="@this"    
+                                         rendered="#{cadastroUsuarioMB.usuario.edicao and cadastroUsuarioMB.usuario.ativo eq false}"
+                                         action="#{cadastroUsuarioMB.ativarDesativarConta()}"
+                                         icon="fa fa-ban"
+                                         styleClass="btn-warning btn-material">       
+                            <p:confirm header="Confirmação" message="Confirma a Reativação? O usuário poderá  acessar novamente o sistema!" icon="pi pi-exclamation-triangle" />           
+                            </p:commandButton>
+                        </p:menuitem>
+                        
+                        <p:separator rendered="#{cadastroUsuarioMB.usuario.edicao and cadastroUsuarioMB.usuario.ativo eq false}"/>
+                        
+                      
+						
+						<p:separator />
+						
+						<p:menuitem>
+							<p:commandButton value="Voltar" immediate="true"
+								action="lista-usuario?faces-redirect=true" process="@this"
+								icon="fa fa-arrow-left" styleClass="btn-teal btn-material">
+							</p:commandButton>
+						</p:menuitem>
+                    </p:splitButton>
+
+                    
+
+              
+                    <p:separator/>  
+                    
+                    <div class="ui-g ui-fluid">
+                    
+                    
+                        <div class="ui-g-6 ui-sm-12">
+                        <div class="ui-material">
+                        <p:selectOneMenu id="tipo" value="#{cadastroUsuarioMB.usuario.tipo}" required="true"
+					                           requiredMessage="O campo 'Tipo' é obrigatório" >
+                      <f:selectItem noSelectionOption="true" itemLabel="Selecione o tipo" />
+                      <f:selectItem itemLabel="Administrador" itemValue="admin"/>
+                      <f:selectItem itemLabel="Funcionário" itemValue="guest"/> 
+	              </p:selectOneMenu>
+                         <p:outputLabel value="Tipo de usuario" for="tipo" style="font-weight: bold"/>
+                          <span class="help-block"> 
+                                <p:message for="tipo" /> 
+                         </span>
+                         </div>
+                    </div>
+                    
+                    
+
+                    <div class="ui-g-6 ui-sm-12">
+                        <div class="ui-material">
+                        <p:inputText id="nome" value="#{cadastroUsuarioMB.usuario.nome}" 
+                                     required="true" requiredMessage="O campo 'Nome do Usuario' é obrigatório"  maxlength="50" rendered="#{cadastroUsuarioMB.codigoUsuario eq null}"/>
+                         <p:outputLabel value="Nome do Usuario" for="nome" style="font-weight: bold" rendered="#{cadastroUsuarioMB.codigoUsuario eq null}"/>
+                          <span class="help-block"> 
+                                <p:message for="nome" /> 
+                         </span>
+                         
+                         </div>
+                    </div>
+                    
+                
+                        
+                    
+                    
+                    
+                       <div class="ui-g-6 ui-sm-12">
+                        <div class="ui-material icon-left">
+                        <p:inputText id="email" maxlength="50" 
+					                  value="#{cadastroUsuarioMB.usuario.email}" required="true" rendered="#{cadastroUsuarioMB.codigoUsuario eq null}"
+					                  requiredMessage="O campo 'Email' é obrigatório" >
+                          <i id="fa" class="fa fa-at"  style="font-size: 20px; margin-top: 10px"/>
+                         </p:inputText>
+                         <p:outputLabel value="Email do Usuario" for="email" style="font-weight: bold"  rendered="#{cadastroUsuarioMB.codigoUsuario eq null}"/>
+                          <span class="help-block"> 
+                                <p:message for="email" /> 
+                         </span>
+                         
+                         </div>
+                    </div>
+           <!--  
+                  <div class="ui-g-6 ui-sm-12">
+                        <div class="ui-material icon-left">
+								 	<p:password  id="senha"   maxlength="70"  
+				                                 value="#{cadastroUsuarioMB.usuario.senhaSemCriptografia}"  rendered="#{cadastroUsuarioMB.codigoUsuario eq null}"
+				                                 validatorMessage="Informe uma senha com no minimo 8 caracteres"
+				                                 feedback="true"  promptLabel="Digite a senha" weakLabel="Fraca"
+                                                  goodLabel="Boa" strongLabel="Forte">
+                                            <i id="fa" class="fa fa-lock"  style="font-size: 20px; margin-top: 10px"/>      
+				                           <f:validateLength minimum="8" />       
+				                     </p:password>
+                         <p:outputLabel value="Senha do Usuario" for="senha" style="font-weight: bold"  rendered="#{cadastroUsuarioMB.codigoUsuario eq null}"/>
+                          <span class="help-block"> 
+                                <p:message for="senha" /> 
+                         </span>
+							</div>
+                    </div>
+              -->       
+    
+                        
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

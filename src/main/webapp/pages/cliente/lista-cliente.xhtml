@@ -1,0 +1,127 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://github.com/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0.5em 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: auto;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Pesquisa Cliente
+    </ui:define>
+
+    <ui:define name="description">
+        Lista dos clientes cadastrados...
+    </ui:define>
+
+    <ui:define name="body">
+       
+
+			<h:form>
+            	<div class="box box-primary">
+                	<div class="box-header with-border">
+                    	<p:commandButton action="cadastro-cliente?faces-redirect=true" ajax="false" icon="fa fa-plus"
+                         	            value="Novo" styleClass="btn-primary btn-material"/>
+                    	<p:spacer width="5"/>
+	                    
+	                    <p:separator/>
+	                    
+	                    
+	                    <p:dataTable id="clienteTable" widgetVar="clienteTable" rows="5" lazy="true"
+	                                 value="#{listaClienteMB.dataModel}" var="cliente"              			 
+	                                 paginator="true" 	                                 
+	                                 paginatorPosition="bottom"	                                 
+	                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+	                                 
+	                                  rowsPerPageTemplate="5,10,15,20,30">
+                    
+	                        
+	                        <p:column headerText="Nome"
+	                                  filterBy="#{cliente.nome}" filterMatchMode="contains"
+	                                  sortBy="#{cliente.nome}"   >
+	                           <h:link value="#{cliente.nome}" outcome="cadastro-cliente.xhtml" style="font-weight: bold">
+	                               <f:param name="codigo" value="#{cliente.codigo}"/>
+	                           </h:link> 
+	                        </p:column>
+	                        
+	                       <p:column headerText="CPFouCNPJ"  style="text-align: center"
+	                                 filterBy="#{cliente.cpfOuCnpj}" filterMatchMode="contains"  
+	                                 priority="3">
+	                            <h:outputLabel value="#{cliente.cpfOuCnpj}" />
+	                        </p:column> 
+	                        
+	                        <p:column headerText="Data de Cadastro"  style="text-align: center"
+	                                  sortBy="#{cliente.dataCadastro}" >
+	                            <h:outputLabel value="#{cliente.dataCadastro}" >
+	                           <f:convertDateTime locale="pt_BR"/>
+	                            </h:outputLabel>
+	                        </p:column>
+	                        
+	                         <p:column headerText="Endereço" priority="4">
+	                            <h:outputLabel value="#{cliente.endereco}" />
+	                        </p:column>	
+	                        
+	                        <p:column headerText="Bairro" 
+	                                  filterBy="#{cliente.bairro}" filterMatchMode="contains"
+	                                  sortBy="#{cliente.bairro}" 
+	                                   priority="3">
+	                            <h:outputLabel value="#{cliente.bairro}" />
+	                        </p:column>
+	                        
+	                        <p:column headerText="Cidade" 
+	                                  filterBy="#{cliente.cidade}" filterMatchMode="contains"
+	                                  sortBy="#{cliente.cidade}" 
+	                                  priority="4">
+	                            <h:outputLabel value="#{cliente.cidade}" />
+	                            <h:outputLabel value=" - " />
+	                             <h:outputLabel value="#{cliente.estado}" />
+	                        </p:column>
+	                        
+	                        <p:column headerText="CEP"  style="text-align: center"
+	                                  priority="4">
+	                           <h:outputLabel value="#{cliente.cep}" />
+	                        </p:column>
+	                        
+	                         <p:column headerText="Telefone" style="text-align: center"
+	                                   priority="3">
+	                           <h:outputLabel value="#{cliente.telefone}" />
+	                        </p:column>
+	                        
+	                         <p:column headerText="Celular"  style="text-align: center">
+	                           <h:outputLabel value="#{cliente.celular}" />
+	                        </p:column>
+	                        
+	                         <p:column headerText="Celular2"  style="text-align: center"
+	                                   priority="4">
+	                           <h:outputLabel value="#{cliente.celular2}" />
+	                        </p:column>
+	                        	
+	                    </p:dataTable>
+					</div>
+	            </div>
+        	</h:form>
+        	
+
+        
+    </ui:define>
+
+</ui:composition>

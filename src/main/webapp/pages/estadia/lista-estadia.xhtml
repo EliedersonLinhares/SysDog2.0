@@ -1,0 +1,151 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://github.com/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0.5em 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: auto;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Pesquisa Estadia
+    </ui:define>
+
+    <ui:define name="description">
+        Lista de estadias cadastradas...
+    </ui:define>
+
+    <ui:define name="body">
+       
+			<h:form>
+            	<div class="box box-primary">
+                	<div class="box-header with-border">
+                    	
+	                    
+	                    
+	                    <p:dataTable id="despesaTable" widgetVar="despesaTable" rows="5" lazy="true"
+	                                 value="#{historicoEstadiaMB.dataModel}" var="estadia"              			 
+	                                 paginator="true" 	                                 
+	                                 paginatorPosition="bottom"	                                 
+	                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+	                                 
+	                                  rowsPerPageTemplate="5,10,15,20,30">
+	                                  
+	                                  
+	                         <p:column headerText="Código" style="text-align: center"
+	                                  filterBy="#{estadia.codigo}" filterMatchMode="contains"
+	                                  sortBy="#{estadia.codigo}"  >
+	                           <h:link value="#{estadia.codigo}" outcome="consulta-estadia.xhtml" style="font-weight: bold">
+	                               <f:param name="codigo" value="#{estadia.codigo}"/>
+	                           </h:link> 
+	                        </p:column>           
+	                                  
+                          <p:column headerText="Data de Entrada" 
+                                    sortBy="#{estadia.dataEntrada}"
+                                     priority="3">
+	                            <h:outputLabel value="#{estadia.dataEntrada}" > 
+	                             <f:convertDateTime locale="pt_BR" pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo"/>
+	                            </h:outputLabel>
+	                        </p:column>	
+	                        
+	                        <p:column headerText="Data de Saída"
+	                                   sortBy="#{estadia.dataSaida}" 
+	                                  priority="3">
+	                            <h:outputLabel value="#{estadia.dataSaida}" > 
+	                            <f:convertDateTime locale="pt_BR" pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo"/>
+	                            </h:outputLabel>
+	                        </p:column>	
+	                        
+	                          <p:column headerText="Animal" >
+	                           <h:outputLabel value="#{estadia.animal.nome}" />
+	                        </p:column>
+	                        
+	                         <p:column headerText="Local" 
+	                                   priority="3">
+	                            <h:outputLabel value="#{estadia.local.descricao}" />
+	                        </p:column>
+	                        
+	                         <p:column headerText="Valor Cobrado(R$)"  style="text-align: center"
+	                                   sortBy="#{estadia.valorCobrado}"
+	                                   priority="4">
+	                           <h:outputLabel value="#{estadia.valorCobrado}"  >
+	                           <f:convertNumber locale="pt_BR" minFractionDigits="2"/><!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+	                           </h:outputLabel>
+	                        </p:column>	
+	                        
+	                        <p:column headerText="Ração(R$)" style="text-align: center" 
+	                                   sortBy="#{estadia.gastoRacao}"
+	                                   priority="6">
+	                           <h:outputLabel value="#{estadia.gastoRacao}">
+	                           <f:convertNumber locale="pt_BR" minFractionDigits="2"/><!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+	                           </h:outputLabel>
+	                        </p:column>
+	                        
+	                         <p:column headerText="Vacina(R$)"  style="text-align: center" 
+	                                   sortBy="#{estadia.gastoVacina}"
+	                                   priority="6">
+	                           <h:outputLabel value="#{estadia.gastoVacina}">
+	                           <f:convertNumber locale="pt_BR" minFractionDigits="2"/><!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+	                           </h:outputLabel>
+	                        </p:column>
+	                        
+	                         <p:column headerText="Outros(R$)" style="text-align: center"
+	                                   sortBy="#{estadia.gastoOutros}"
+	                                   priority="6">
+	                           <h:outputLabel value="#{estadia.gastoOutros}">
+	                           <f:convertNumber locale="pt_BR" minFractionDigits="2"/><!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+	                           </h:outputLabel>
+	                        </p:column>
+	                        
+	                            <p:column headerText="Desconto(R$)" style="text-align: center"
+	                                   sortBy="#{estadia.desconto}"
+	                                   priority="4">
+	                           <h:outputLabel value="#{estadia.desconto}">
+	                           <f:convertNumber locale="pt_BR" minFractionDigits="2" /><!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+	                           </h:outputLabel>
+	                        </p:column>
+	                        
+	                      <p:column headerText="Total" style="text-align: center"
+	                                   sortBy="#{estadia.total}"
+	                                   priority="3">
+	                           <h:outputLabel value="#{estadia.total}">
+	                           <f:convertNumber locale="pt_BR" minFractionDigits="2"/><!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+	                           </h:outputLabel>
+	                        </p:column>
+	                        
+	                
+	                        <p:column headerText="Status" >
+	                            <h:outputLabel value="CONCLUÍDA"  rendered="#{estadia.status eq false}"  style="color: red"/>
+	                            <h:outputLabel value="ABERTO"  rendered="#{estadia.status eq true}" style="color: blue"/>
+	                        </p:column>	
+	                        
+	                      
+	                        	
+	                    </p:dataTable>
+					</div>
+	            </div>
+        	</h:form>
+        	
+
+        
+    </ui:define>
+
+</ui:composition>

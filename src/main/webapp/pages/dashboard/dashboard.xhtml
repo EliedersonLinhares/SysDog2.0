@@ -1,0 +1,259 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html">
+
+
+ <h:outputStylesheet library="css" name="dashboard.css"/>
+ <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet'></link>
+  <style type="text/css">
+  
+         .color-red {
+              color: #F00;
+          } 
+          
+         .color-blue {
+              color: blue;
+          }  
+          
+          
+    b.ex1 {
+  padding-left: 20px;
+}
+
+  b.ex2 {
+  padding-left: 44px;
+}
+   b.ex3 {
+  padding-left: 50px;
+}
+.old {
+       
+        background-image: none !important;
+        color: #fca752 !important;
+    }
+ 
+  .logo {
+        width: 5%;
+    }
+    .detail {
+        width: 85%;
+        padding-left: 25px;
+    }   
+    
+    
+
+   }       
+          
+        </style>
+<section class="content-header" style="padding-left: 0px">
+    <h1 >Painel principal
+        <small>Aqui você pode vizualizar dados basicos do sistema </small>
+    </h1>
+</section>
+<p:spacer height="15px"/>
+<div class="row">
+<div class="col-md-3 col-sm-6 col-xs-12">
+<div class="info-box">
+        <span class="info-box-icon bg-light-blue"><i class="fa fa-money"></i></span>
+
+        <div class="info-box-content">
+            <span class="info-box-text">Estadia mensal 
+            <h:outputLabel value="#{dashboardMB.MêsAtual()}"/>
+            </span>
+            <span class="info-box-number"> 
+                      <h:outputLabel value="R$ #{dashboardMB.TotaMensal()}">
+	                   <f:convertNumber locale="pt_BR" minFractionDigits="2"/><!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+	                    </h:outputLabel>
+	       </span>
+        </div>
+        <!-- /.info-box-content -->
+    </div>
+    <!-- /.info-box -->
+</div>
+<!-- /.col -->
+<div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="info-box">
+        <span class="info-box-icon bg-light-blue"><i class="fa fa-money"></i></span>
+
+        <div class="info-box-content">
+            <span class="info-box-text">Despesas mensal
+             <h:outputLabel value="#{dashboardMB.MêsAtual()}"/>
+            </span>
+            <span class="info-box-number">
+            <h:outputLabel value="R$ #{dashboardMB.TotaDespesa()}">
+	                   <f:convertNumber locale="pt_BR" minFractionDigits="2"/><!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+	        </h:outputLabel>
+            </span>
+        </div>
+        <!-- /.info-box-content -->
+    </div>
+    <!-- /.info-box -->
+</div>
+<!-- /.col -->
+
+<!-- fix for small devices only -->
+<div class="clearfix visible-sm-block"></div>
+
+<div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="info-box">
+        <span class="info-box-icon bg-light-blue"><i class="ion ion-ios-calculator"></i></span>
+
+        <div class="info-box-content">
+            <span class="info-box-text">Situação mensal
+            <h:outputLabel value="#{dashboardMB.MêsAtual()}"/>
+            </span>
+            <span class="info-box-number">
+            <h:outputLabel value="R$ #{dashboardMB.TotalCaixa()}" styleClass="#{dashboardMB.CorExibicaoResultado()}" >
+	                   <f:convertNumber locale="pt_BR" minFractionDigits="2"/><!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+	        </h:outputLabel>
+            </span>
+        </div>
+        <!-- /.info-box-content -->
+    </div>
+    <!-- /.info-box -->
+</div>
+<!-- /.col -->
+<div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="info-box">
+        <span class="info-box-icon bg-light-blue"><i class="ion ion-calendar"></i></span>
+
+        <div class="info-box-content">
+            <span class="info-box-text">Estadias Abertas
+            <h:outputLabel value="#{dashboardMB.MêsAtual()}"/>
+            </span>
+            <span class="info-box-number">
+            <h:outputLabel value="#{dashboardMB.EstadiasAbertas()}"/>
+            </span>
+        </div>
+        <!-- /.info-box-content -->
+    </div>
+    <!-- /.info-box -->
+</div>
+<!-- /.col -->
+
+</div>
+   <div class="row ">
+      <div class="col-md-6 col-sm-12 col-xs-12">
+     <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Estadias perto de finalizar</h3>
+                   </div>
+         <p:dataView   value="#{dashboardMB.estadias}"  var="estadia" rows="3" paginator="true" paginatorPosition="bottom"	   
+                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+   
+   
+   
+     <p:dataViewListItem>
+            <h:panelGrid columns="3" style="width:100%" columnClasses="logo,detail">
+                 <p:graphicImage cache="false" height="80" width="80" url="https://s3-sa-east-1.amazonaws.com/sysdog/an#{estadia.animal.codigo}.jpg"  rendered="#{estadia.animal.comFoto eq true}" />
+                <p:graphicImage cache="false" width="80" height="80" value="/resources/images/dog.png"   rendered="#{estadia.animal.comFoto eq false}"  /><!-- rendered="#{estadia.animal.comFoto eq true}" -->
+ 
+                <p:outputPanel>
+                    <h:panelGrid columns="2" cellpadding="5">
+                        <h:outputText value="Nome:" />
+                        <h:outputText value="#{estadia.animal.nome}" style="font-weight: bold"/>
+ 
+                        <h:outputText value="Cliente:" />
+                        <h:outputText value="#{estadia.animal.cliente.nome}" style="font-weight: bold"/>
+ 
+                        <h:outputText value="Saida: " />
+                        <h:outputText value="#{estadia.dataSaida}" style="font-weight: bold;font-size: 18px">
+                       <f:convertDateTime locale="pt_BR" pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo"/>
+                        </h:outputText>
+                 
+	                   
+                    </h:panelGrid>
+                </p:outputPanel>
+               
+            </h:panelGrid>
+        </p:dataViewListItem>
+ 
+   </p:dataView>
+   </div>
+   </div>
+   
+    <div class="col-md-6 col-sm-12 col-xs-12">
+           <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Contas a vencer nos próximos cinco dias</h3>
+                    </div>
+               <!-- Esse datatable irá ter uma logica para exibir colunas em vermelho caso a data de vencimento seja igual a data de hoje, e na coluna
+               data será exibido uma label com com o aviso escrito  -->
+               <p:dataTable id="despesaVencimento" widgetVar="despesaVencimento" rows="3" lazy="true" 
+                rowStyleClass="#{despesa.dataVencimento eq dashboardMB.DiaAtual() ? 'color-red' : despesa.dataVencimento eq dashboardMB.Amanha() ? 'old' : null}"
+                value="#{dashboardMB.dataModel}" var="despesa"              			 
+	            paginator="true" 	                                 
+	            paginatorPosition="bottom"	                                 
+	            paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} ">     
+	                                  
+	                     <p:column headerText="Nome"
+	                                  filterBy="#{despesa.descricao}" filterMatchMode="contains"
+	                                  sortBy="#{despesa.descricao}"   >
+	                   
+	                           <h:outputLabel value="#{despesa.descricao}" />
+	                           
+	                        </p:column>
+	                        
+	                         <p:column headerText="Tipo" 
+	                                   filterBy="#{despesa.tipo}" filterMatchMode="contains"
+	                                   sortBy="#{despesa.tipo}"
+	                                   priority="3">
+	                            <h:outputLabel value="#{despesa.tipo}" />
+	                        </p:column>	
+
+	                        <p:column headerText="Vencimento" style="text-align: center"
+	                                  sortBy="#{despesa.dataVencimento}"
+	                                  >
+	                           <h:outputLabel value="#{despesa.dataVencimento}">
+	                           <f:convertDateTime locale="pt_BR"/>
+	                           </h:outputLabel>
+	                           <br></br>
+	                            <h:outputLabel value="#{despesa.dataVencimento eq dashboardMB.DiaAtual() ? 'Atenção!Vencimento hoje' : despesa.dataVencimento eq dashboardMB.Amanha() ? 'Atenção!Vencimento amanhã' : null}" />
+	                            
+	                        </p:column>
+	                        
+	                         <p:column headerText="Valor" style="text-align: center"
+	                                   sortBy="#{despesa.valor}"
+	                                   priority="3">
+	                           <h:outputLabel value="#{despesa.valor}">
+	                           <f:convertNumber locale="pt_BR" minFractionDigits="2"/><!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+	                           </h:outputLabel>
+	                        </p:column>        
+	                                  
+	              </p:dataTable>                    
+                   
+            </div>
+     </div>
+     
+
+   
+        <div class="col-md-12 col-sm-12 col-xs-12" >
+           <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Relatório dos ultimos seis meses</h3>
+          
+                    </div>
+                 <p:barChart model="#{dashboardMB.barModel2}" style="width: 100%; height: 500px;" rendered="#{autenticaMB.usuarioLogado.tipo eq 'admin'}">
+                           
+                           </p:barChart>      
+            </div>
+     </div>
+     
+          <div class="col-md-12 col-sm-12 col-xs-12">
+           <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Despesas com maiores gastos</h3>
+          
+                    </div>
+               <p:donutChart id="donut" model="#{dashboardMB.donutModel}" style="width: 100%; height: 400px;" rendered="#{autenticaMB.usuarioLogado.tipo eq 'admin'}"/>      
+            </div>
+     </div>
+     
+ </div> 
+
+     
+         
+
+</ui:composition>

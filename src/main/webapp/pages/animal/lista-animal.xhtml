@@ -1,0 +1,133 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://github.com/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0.5em 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: auto;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Pesquisa Animal
+    </ui:define>
+
+    <ui:define name="description">
+        Lista dos animais cadastrados...
+    </ui:define>
+
+    <ui:define name="body">
+        
+
+			<h:form>
+            	<div class="box box-primary">
+                	<div class="box-header with-border">
+                    	<p:commandButton action="cadastro-animal?faces-redirect=true" ajax="false" icon="fa fa-plus"
+                         	            value="Novo" styleClass="btn-primary btn-material"/>
+                    	<p:spacer width="5"/>
+	                    
+	                    <p:separator/>
+	                    
+	                    
+	                    <p:dataTable id="animalTable" widgetVar="animalTable" rows="5" lazy="true"
+	                                 value="#{listaAnimalMB.dataModel}" var="animal"              			 
+	                                 paginator="true" 	                                 
+	                                 paginatorPosition="bottom"	                                 
+	                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+	                                  rowsPerPageTemplate="5,10,15,20,30">
+                    
+	                        
+	                        <p:column headerText="Nome"
+	                                  filterBy="#{animal.nome}" filterMatchMode="contains"
+	                                  sortBy="#{animal.nome}"  >
+	                           <h:link value="#{animal.nome}" outcome="cadastro-animal.xhtml" style="font-weight: bold">
+	                               <f:param name="codigo" value="#{animal.codigo}"/>
+	                           </h:link> 
+	                        </p:column>
+	                        
+	                       <p:column headerText="Tipo"  style="text-align: center"
+	                                  sortBy="#{animal.tipo}"  
+	                                  priority="3" >
+	                            <h:outputLabel value="#{animal.tipo}" />
+	                        </p:column> 
+	                        
+	                        <p:column headerText="Raça" style="text-align: center"
+	                                  filterBy="#{animal.raca}" filterMatchMode="contains"   
+	                                  sortBy="#{animal.raca}"  
+	                                  priority="3" >
+	                            <h:outputLabel value="#{animal.raca}" />
+	                        </p:column>
+	                        
+	                         <p:column headerText="Sexo" style="text-align: center"
+	                                   sortBy="#{animal.sexo}" 
+	                                   priority="3">
+	                            <h:outputLabel value="#{animal.sexo}" />
+	                        </p:column>	
+	                        
+	                        <p:column headerText="Idade" style="text-align: center"
+	                                  sortBy="#{animal.idade}"  
+	                                  priority="3" >
+	                            <h:outputLabel value="#{animal.idade}" />
+	                        </p:column>
+	       
+	                        <p:column headerText="Tamanho" style="text-align: center"
+	                                  filterBy="#{animal.tamanho}" filterMatchMode="contains"
+	                                  sortBy="#{animal.tamanho}" 
+	                                  priority="4" >
+	                           <h:outputLabel value="#{animal.tamanho}" />
+	                        </p:column>
+	                        
+	                        <p:column headerText="Castrado" 
+	                                  priority="4" style="text-align: center">
+	                         
+	                           <h:outputLabel value="Não"  rendered="#{animal.castrado eq false}" />
+	                            <h:outputLabel value="Sim"  rendered="#{animal.castrado eq true}" />
+	                        </p:column>
+	                        
+	                         <p:column headerText="Cliente" >
+	                           <h:outputLabel value="#{animal.cliente.nome}" />
+	                        </p:column>
+	                        
+	                        <p:column headerText="Foto"  style="text-align: center">
+	                            <p:graphicImage cache="false" width="80" height="80" value="/resources/images/dog.png"   rendered="#{animal.comFoto eq false}"  />
+	                             <p></p>
+	                           <h:link value="insira uma imagem" outcome="uploadFoto-animal.xhtml" rendered="#{animal.comFoto eq false}" >
+	                           <f:param name="codigo" value="#{animal.codigo}"/>
+	                           </h:link>
+	                         
+	                           
+	                           <p:graphicImage cache="false" height="80" width="80" url="https://s3-sa-east-1.amazonaws.com/sysdog/an#{animal.codigo}.jpg"  rendered="#{animal.comFoto eq true}" />
+	                          <p></p>
+	                          <h:link value="Alterar a imagem" outcome="uploadFoto-animal.xhtml" rendered="#{animal.comFoto eq true}" >
+	                           <f:param name="codigo" value="#{animal.codigo}"/>
+	                           </h:link>
+	                        
+	                        </p:column>
+	                        	
+	                    </p:dataTable>
+					</div>
+	            </div>
+        	</h:form>
+        	
+
+        
+    </ui:define>
+
+</ui:composition>

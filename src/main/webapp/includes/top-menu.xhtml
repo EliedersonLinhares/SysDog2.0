@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+	<ul class="nav navbar-nav">
+
+
+		<li class="dropdown user user-menu"><a href="#"
+			class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-user"></i> <span class="hidden-xs">#{autenticaMB.usuarioLogado.nome}
+			</span>
+		</a>
+			<ul class="dropdown-menu">
+				<li class="user-header">
+					<div class="hidden-xs">
+
+						<p:graphicImage value="/resources/images/nophoto.jpg"
+							styleClass="img-circle" width="70" height="70"
+							rendered="#{autenticaMB.usuarioLogado.comFoto eq false}"
+							cache="false" />
+
+						<p:graphicImage
+							value="https://s3-sa-east-1.amazonaws.com/sysdog/us#{autenticaMB.usuarioLogado.codigo}.jpg"
+							styleClass="img-circle" width="70" height="70"
+							rendered="#{autenticaMB.usuarioLogado.comFoto eq true}"
+							cache="false" />
+					</div>
+					<p>
+						#{autenticaMB.usuarioLogado.nome} <small> <p:outputLabel
+								value="Administrador" style="font-weight:normal"
+								rendered="#{alterarUsuarioLogado.usuarioAtual.tipo eq 'admin' }" />
+							<p:outputLabel value="Funcionário" style="font-weight:normal"
+								rendered="#{alterarUsuarioLogado.usuarioAtual.tipo eq 'guest' }" />
+						</small>
+					</p>
+				</li>
+				<li class="user-footer"><h:form prependId="false">
+						<div class="pull-left">
+							<p:commandButton value="Alterar Dados"
+								oncomplete="PF('dialogo').show();" icon="fa fa-pencil-square-o"
+								styleClass="btn-primary " />
+						</div>
+						<div class="pull-right">
+							<p:commandLink id="logout" action="#{autenticaMB.Logout()}"
+								title="Logoff">
+								<i class="fa fa-sign-out fa-2x"></i>
+							</p:commandLink>
+						</div>
+					</h:form></li>
+			</ul></li>
+
+
+
+
+		<p:dialog header="Alterar Dados" widgetVar="dialogo" draggable="false" styleClass="box-primary box-solid"
+			resizable="false" modal="false" closable="true" responsive="true" width="350">
+			<h:form id="formCadastro" enctype="multipart/form-data">
+				<div class="box box-primary">
+
+					<p:spacer />
+					<div class="row ui-fluid">
+						<div class="col-sm-12 align-center">
+
+							<p:graphicImage value="/resources/images/nophoto.jpg"
+								styleClass="img-circle" width="200" height="200"
+								rendered="#{autenticaMB.usuarioLogado.comFoto eq false}"
+								cache="false" />
+
+
+							<p:graphicImage id="foto1"
+								value="https://s3-sa-east-1.amazonaws.com/sysdog/us#{autenticaMB.usuarioLogado.codigo}.jpg"
+								styleClass="img-circle" width="160" height="160"
+								rendered="#{autenticaMB.usuarioLogado.comFoto eq true}"
+								cache="false" />
+						</div>
+					</div>
+
+					<p:spacer />
+
+					<p:fileUpload
+						fileUploadListener="#{alterarUsuarioLogado.uploadProfilePicture}"
+						filemode="advanced" fileLimit="1"
+						allowTypes="/(\.|\/)(jpe?g|png)$/" cancelLabel="Cancelar"
+						invalidFileMessage="Arquivo inválido! A imagem precisa ser .png ou .jpg"
+						invalidSizeMessage="A imagem é muito grande, escolha uma imagem menor"
+						label="Escolher" update=":formCadastro:foto1" />
+
+					<p:spacer width="5" />
+
+					<p:panel>
+						
+							
+							
+							<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-danger box-solid">
+							<p:commandButton value="Sim" type="button"
+								styleClass="btn-material btn-primary ui-confirmdialog-yes" icon="fa fa-check" />
+							<p:commandButton value="Não" type="button"
+								styleClass="btn-material btn-danger ui-confirmdialog-no" icon="fa fa-close" />
+						</p:confirmDialog>
+						
+							
+							<div class="ui-g ui-fluid">
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material icon-left">
+										<p:password id="senhaAtual" maxlength="70" required="true"
+											requiredMessage="o campo 'Senha atual' é obrigatório"
+											value="#{alterarUsuarioLogado.usuarioAtual.senhaTemporaria}"
+											
+											feedback="true" promptLabel="Digite a senha"
+											weakLabel="Fraca" goodLabel="Boa" strongLabel="Forte">
+											<i id="fa" class="fa fa-lock"
+												style="font-size: 20px; margin-top: 10px" />
+											
+										</p:password>
+										<p:outputLabel value="Senha Atual" for="senhaAtual"
+											style="font-weight: bold" />
+										<span class="help-block"> <p:message for="senhaAtual" />
+										</span>
+									</div>
+								</div>
+
+
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material icon-left">
+										<p:password id="senhaNova" maxlength="70" required="true"
+											requiredMessage="o campo 'Nova Senha' é obrigatório"
+											value="#{alterarUsuarioLogado.usuarioAtual.senhaSemCriptografia}"
+											
+											feedback="true" promptLabel="Digite a senha"
+											weakLabel="Fraca" goodLabel="Boa" strongLabel="Forte">
+											<i id="fa" class="fa fa-lock"
+												style="font-size: 20px; margin-top: 10px" />
+										
+										</p:password>
+										<p:outputLabel value="Nova Senha" for="senhaNova"
+											style="font-weight: bold" />
+										<span class="help-block"> <p:message for="senhaNova" />
+										</span>
+									</div>
+								</div>
+								
+                        <p:spacer width="5" />
+                        <p:separator />
+                           <div class="box-header with-border">
+							<div id="main-buttons">
+							 <div class="col-sm-12 align-center">
+								<p:commandButton value="Salvar Senha" update="@form"
+									action="#{alterarUsuarioLogado.salvarAtual()}"
+									icon="fa fa-key" styleClass="btn-lg btn-material btn-primary">
+									<p:confirm header="Confirmação"
+										message="Confirma a alteração da senha? Será preciso logar-se novamente com a senha nova!"
+										icon="pi pi-exclamation-triangle" />
+								</p:commandButton>
+                             </div>
+							</div>
+
+
+							</div>
+						</div>
+					</p:panel>
+				</div>
+			</h:form>
+		</p:dialog>
+
+
+
+
+		<!--  
+        <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <pe:gravatar id="userImage"
+                             value="nonexisting"/>
+                <span class="hidden-xs">#{shiroBean.currentUser}</span>
+                
+            </a>
+             <li><a href="#{request.contextPath}/logout"><span class="glyphicon glyphicon-log-out"></span>&#160;Log Out</a></li>
+        </li>
+        
+        
+        
+          <h:link value="Alterar Dados" outcome="/pages/edicao/alterarCadastro-usuario.xhtml"  style="font-weight: bold">
+	                               <f:param name="codigo" value="#{autenticaMB.usuarioLogado.codigo}"/>
+	                           </h:link> 
+        
+        
+        -->
+	</ul>
+
+
+</ui:composition>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+        Despesa - Confirmar Pagamento
+    </ui:define>
+	<ui:define name="head-end">
+		<style type="text/css">
+div.ui-material {
+	margin-top: 20px;
+}
+
+input:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0 30px white inset;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="body">
+		<f:metadata>
+			<f:viewParam name="codigo" value="#{cadastroDespesaMB.codigoDespesa}"
+				converter="javax.faces.Long" />
+			<f:event listener="#{cadastroDespesaMB.inicializar()}"
+				type="preRenderView"></f:event>
+		</f:metadata>
+
+	
+		<h:form id="form" prependId="false">
+
+
+			<p:focus />
+
+
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<div id="main-buttons" class="hidden-sm hidden-xs">
+						<p:commandButton value="Salvar" update="@form"
+							action="#{cadastroDespesaMB.pagar()}" icon="fa fa-floppy-o"
+							styleClass="btn-primary btn-material">
+						</p:commandButton>
+
+						<p:spacer width="5" />
+						<p:commandButton value="Voltar" immediate="true"
+							action="lista-despesa?faces-redirect=true" process="@this"
+							icon="fa fa-arrow-left" styleClass="btn-teal btn-material">
+						</p:commandButton>
+
+					</div>
+
+					<p:splitButton value="Salvar" update="@form" icon="fa fa-floppy-o"
+						action="#{cadastroDespesaMB.pagar()}"
+						styleClass="hidden-md hidden-lg btn-primary btn-material">
+
+						<p:menuitem>
+							<p:commandButton value="Voltar" immediate="true"
+								action="lista-despesa?faces-redirect=true" process="@this"
+								icon="fa fa-arrow-left" styleClass="btn-teal btn-material">
+							</p:commandButton>
+						</p:menuitem>
+					</p:splitButton>
+
+
+
+					<p:separator />
+
+					<div class="ui-g ui-fluid">
+
+
+
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material icon-left">
+								<p:inputText id="valor" maxlength="8" size="10"
+									value="#{cadastroDespesaMB.despesa.valor}" required="true"
+									requiredMessage="O campo 'Valor' é obrigatório"
+									validatorMessage="Informe um valor entre 0,01 e 99999.99 para o campo preço">
+									<!-- Edição da mensagem do validador -->
+									<f:validateDoubleRange minimum="0.01" maximum="99999.99" />
+									<!--Validador para campo Double,bigdecimal...  -->
+									<f:convertNumber locale="pt_BR" minFractionDigits="2" />
+									<!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+
+									<i id="fa" class="fa fa-usd"
+										style="font-size: 20px; margin-top: 10px" />
+									<p:keyFilter regEx="/[0-9_,]/i" />
+								</p:inputText>
+								<p:outputLabel value="Valor" for="valor"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="valor" />
+								</span>
+							</div>
+						</div>
+
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material icon-left">
+								<p:calendar id="dataPagamento"
+									value="#{cadastroDespesaMB.despesa.dataPagamento}"
+									required="true" showOn="both"
+									requiredMessage="O campo 'Data de Cadastro' é obrigatório"
+									locale="pt" pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo">
+									<p:ajax event="dateSelect" global="false"
+										onstart="adminMaterial()" />
+								</p:calendar>
+								<p:outputLabel value="Data de Pagamento" for="dataPagamento"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="dataPagamento" />
+								</span>
+							</div>
+						</div>
+
+
+					</div>
+				</div>
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

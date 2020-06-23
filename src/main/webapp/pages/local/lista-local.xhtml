@@ -1,0 +1,107 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://github.com/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0.5em 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: auto;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Pesquisa Local
+    </ui:define>
+
+    <ui:define name="description">
+        Lista dos locais cadastrados...
+    </ui:define>
+
+    <ui:define name="body">
+       
+
+			<h:form>
+            	<div class="box box-primary">
+                	<div class="box-header with-border">
+                    	<p:commandButton action="cadastro-local?faces-redirect=true" ajax="false" icon="fa fa-plus"
+                         	            value="Novo" styleClass="btn-primary btn-material"/>
+                    	<p:spacer width="5"/>
+	                    
+	                    <p:separator/>
+	                    
+	                    
+	                    <p:dataTable id="localTable" widgetVar="localTable" rows="5" lazy="true"
+	                                 value="#{listaLocalMB.dataModel}" var="local"              			 
+	                                 paginator="true" 	                                 
+	                                 paginatorPosition="bottom"	                                 
+	                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+	                                 
+	                                  rowsPerPageTemplate="5,10,15,20,30">
+                    
+	                        
+	                        <p:column headerText="Nome"
+	                                  filterBy="#{local.descricao}" filterMatchMode="contains"
+	                                  sortBy="#{local.descricao}"  >
+	                           <h:link value="#{local.descricao}" outcome="cadastro-local.xhtml" style="font-weight: bold">
+	                               <f:param name="codigo" value="#{local.codigo}"/>
+	                           </h:link> 
+	                        </p:column>
+	                        
+	                         <p:column headerText="Endereço" priority="3">
+	                            <h:outputLabel value="#{local.endereco}" />
+	                        </p:column>	
+	                        
+	                        <p:column headerText="Bairro" 
+	                                  filterBy="#{local.cidade}" filterMatchMode="contains"
+	                                  sortBy="#{local.cidade}"
+	                                  priority="3">
+	                            <h:outputLabel value="#{local.bairro}" />
+	                        </p:column>
+	                        
+	                        <p:column headerText="Cidade" 
+	                                  filterBy="#{local.cidade}" filterMatchMode="contains"
+	                                  sortBy="#{local.cidade}" 
+	                                  priority="4">
+	                            <h:outputLabel value="#{local.cidade}" />
+	                            <h:outputLabel value=" - " />
+	                             <h:outputLabel value="#{local.estado}" />
+	                        </p:column>
+	                        
+	                        <p:column headerText="CEP" priority="4">
+	                           <h:outputLabel value="#{local.cep}" />
+	                        </p:column>
+	                        
+	                         <p:column headerText="Telefone" priority="3">
+	                           <h:outputLabel value="#{local.telefone}" />
+	                        </p:column>
+	                        
+	                         <p:column headerText="Celular" >
+	                           <h:outputLabel value="#{local.celular}" />
+	                        </p:column>
+	                        	
+	                    </p:dataTable>
+					</div>
+	            </div>
+        	</h:form>
+        	
+
+        
+    </ui:define>
+
+</ui:composition>

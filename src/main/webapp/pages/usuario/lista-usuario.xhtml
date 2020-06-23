@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://github.com/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0.5em 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: auto;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Pesquisa Usuário
+    </ui:define>
+
+    <ui:define name="description">
+        Lista dos usuários cadastrados...
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Animais"/>
+
+			<h:form>
+            	<div class="box box-primary">
+                	<div class="box-header with-border">
+                    	<p:commandButton action="cadastro-usuario?faces-redirect=true" ajax="false" icon="fa fa-plus"
+                         	            value="Novo" styleClass="btn-primary btn-material"/>
+                    	<p:spacer width="5"/>
+	                    
+	                    <p:separator/>
+	                    
+	                    
+	                    <p:dataTable id="usuarioTable" widgetVar="usuarioTable" rows="5" lazy="true"
+	                                 value="#{listaUsuarioMB.dataModel}" var="usuario"              			 
+	                                 paginator="true" 	                                 
+	                                 paginatorPosition="bottom"	                                 
+	                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+	                                  rowsPerPageTemplate="5,10,15,20,30">
+                    
+	                        
+	                        <p:column headerText="Nome" style="text-align: center"
+	                                  filterBy="#{usuario.nome}" filterMatchMode="contains"
+	                                  sortBy="#{usuario.nome}"  >
+	                           <h:link value="#{usuario.nome}" outcome="cadastro-usuario.xhtml" style="font-weight: bold" disabled="#{usuario.tipo eq 'admin'}">
+	                               <f:param name="codigo" value="#{usuario.codigo}"/>
+	                           </h:link> 
+	                           
+	                           <p></p>
+	                           <h:outputLabel value="(Conta Desativada)"  rendered="#{usuario.ativo eq false}" style="color: red"/>
+	                           
+	                        </p:column>
+	                        
+	        
+	                        
+	                       <p:column headerText="Tipo"   style="text-align: center"
+	                                  priority="3" >
+	                            <h:outputLabel value="Administrador" rendered="#{usuario.tipo eq 'admin'}" />
+	                            <h:outputLabel value="Funcionário" rendered="#{usuario.tipo eq 'guest'}" />
+	                        </p:column> 
+	                        
+	                        <p:column headerText="email"  style="text-align: center"
+	                                  filterBy="#{usuario.email}" filterMatchMode="contains"   
+	                                  sortBy="#{usuario.email}"  
+	                                  priority="3" >
+	                            <h:outputLabel value="#{usuario.email}" />
+	                        </p:column>
+	
+	                        <p:column headerText="Foto"  style="text-align: center">
+	                           
+	                          <p:graphicImage cache="false" width="80" height="80" value="/resources/images/nophoto.jpg"   rendered="#{usuario.comFoto eq false}"  />
+	                           <p:graphicImage cache="false" height="80" width="80" url="https://s3-sa-east-1.amazonaws.com/sysdog/us#{usuario.codigo}.jpg"  rendered="#{usuario.comFoto eq true}" />
+	                          
+	                        
+	                        </p:column>
+	                        	
+	                    </p:dataTable>
+					</div>
+	            </div>
+        	</h:form>
+        	
+
+        
+    </ui:define>
+
+</ui:composition>

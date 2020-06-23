@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:remove="all">Confirmação de Fechamento da Estadia</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div>
+	
+	   <p>
+			Olá,
+			
+		</p>
+		<p>
+		Estamos enviando esse email para confirmar o fechamento da estadia de seu aninal conosco
+		</p>
+		<h3>
+			Estadia código: <span th:text="${estadia.codigo}"> </span>
+		</h3>
+		
+		<p>
+			Data de entrada: <span th:text="${#dates.format(estadia.dataEntrada, 'dd/MM/yyyy hh:mm')}"></span>
+			
+		</p>
+		<p>
+			Data de Saída: <span th:text="${#dates.format(estadia.dataSaida, 'dd/MM/yyyy hh:mm')}"></span>
+		</p>
+		<p>
+			Cliente: <span th:text="${estadia.animal.cliente.nome}"></span>
+		</p>
+		<p>
+		
+			Valor total: <span
+				th:text="${#numbers.formatDecimal(estadia.total, 0,
+'POINT', 2, 'COMMA')}"></span>
+		</p>
+		
+		<p>
+		Atenção, este é um email enviado automaticamente pelo sistema, não responda este email pois ele não é acessado
+		
+		</p>
+		
+		<p>
+		Atenciosamente, ClubinhoDog
+		</p>
+		
+	</div>
+</body>
+</html>

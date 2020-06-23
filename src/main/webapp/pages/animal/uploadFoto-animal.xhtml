@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+       Carregar foto do Animal
+    </ui:define>
+	<ui:define name="head-end">
+		<style type="text/css">
+div.ui-material {
+	margin-top: 20px;
+}
+
+input:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0 30px white inset;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="body">
+		<f:metadata>
+			<f:viewParam name="codigo" value="#{cadastroAnimalMB.codigoAnimal}"
+				converter="javax.faces.Long" />
+			<f:event listener="#{cadastroAnimalMB.inicializar()}"
+				type="preRenderView"></f:event>
+		</f:metadata>
+
+		
+		<h:form id="form" prependId="false" enctype="multipart/form-data">
+
+
+			<p:focus />
+
+
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<div id="main-buttons">
+
+						<p:spacer width="5" />
+						<p:commandButton value="Voltar" immediate="true"
+							action="lista-animal?faces-redirect=true" process="@this"
+							icon="fa fa-arrow-left" styleClass="btn-teal btn-material">
+
+						</p:commandButton>
+
+					</div>
+
+					<p:separator />
+
+					<p:fileUpload
+						fileUploadListener="#{cadastroAnimalMB.uploadProfilePicture}"
+						filemode="advanced" fileLimit="1"
+						allowTypes="/(\.|\/)(jpe?g|png)$/"
+						rendered="#{cadastroAnimalMB.codigoAnimal != null}"
+						cancelLabel="Cancelar"
+						invalidFileMessage="Arquivo inválido! A imagem precisa ser .png ou .jpg"
+						invalidSizeMessage="A imagem é muito grande, escolha uma imagem menor"
+						label="Escolher" />
+
+
+
+
+
+				</div>
+			</div>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

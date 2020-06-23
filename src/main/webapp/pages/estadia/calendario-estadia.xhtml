@@ -1,0 +1,635 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="head-end">
+		<style type="text/css">
+div.ui-material {
+	margin-top: 20px;
+}
+
+input:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0 30px white inset;
+}
+
+.fc-event.event1 {
+	
+}
+
+.fc-event.event2 {
+	background: #D0525D !important;
+	border-color: red;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="title">
+       Cadastro de estadias
+    </ui:define>
+
+	<ui:define name="description">
+        calendario para inserção de estadias...
+    </ui:define>
+
+	<ui:define name="body">
+		<h:form id="formEvento">
+
+			<p:messages id="mensagem" escape="false" closable="true"
+				showDetail="true" showSummary="false" />
+			<p:growl sticky="true" />
+
+			<p:schedule widgetVar="meuCalendario"
+				value="#{calendarioEstadiaMB.lazyEventModel}" id="calendario"
+				locale="pt" timeZone="America/Sao_Paulo" timeFormat="HH:mm">
+				<p:ajax event="eventSelect"
+					listener="#{calendarioEstadiaMB.selecionado}"
+					update="formCadastroAlteracao"
+					oncomplete="PF('dialogoAlteracao').show();" resetValues="true" />
+				<p:ajax event="dateSelect" listener="#{calendarioEstadiaMB.Novo}"
+					update=":formNovo" oncomplete="PF('dialogoCadastro').show();"
+					resetValues="true" />
+
+			</p:schedule>
+
+		</h:form>
+		<p:dialog widgetVar="dialogoCadastro" header="Estadia - Cadastro" styleClass="box-primary box-solid"
+			draggable="false" resizable="false" showEffect="clip"
+			hideEffect="clip" closable="true" responsive="true" width="360">
+			<h:form id="formNovo">
+				<div class="box box-primary">
+					<p:spacer width="5" />
+					<p:tabView id="cad2" cache="false">
+						<p:tab title="Dados da Estadia">
+							<div class="row  ui-fluid">
+
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material">
+										<p:selectOneMenu id="animal" filter="true"
+											value="#{calendarioEstadiaMB.estadia.animal}" required="true"
+											requiredMessage="O campo 'Animal' é obrigatório">
+											<f:selectItem noSelectionOption="true"
+												itemLabel="Selecione um animal" />
+											<f:selectItems
+												value="#{calendarioEstadiaMB.animaisDisponiveis}" />
+										</p:selectOneMenu>
+										<p:outputLabel value="Animal" for="animal"
+											style="font-weight: bold" />
+										<span class="help-block"> <p:message for="animal" />
+										</span>
+									</div>
+								</div>
+
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material">
+										<p:selectOneMenu id="local" filter="true"
+											value="#{calendarioEstadiaMB.estadia.local}" required="true"
+											requiredMessage="O campo 'Local' é obrigatório">
+											<f:selectItem noSelectionOption="true"
+												itemLabel="Selecione um local" />
+											<f:selectItems value="#{calendarioEstadiaMB.locais}" />
+										</p:selectOneMenu>
+										<p:outputLabel value="Local" for="local"
+											style="font-weight: bold" />
+										<span class="help-block"> <p:message for="local" />
+										</span>
+									</div>
+								</div>
+
+
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material icon-left">
+										<p:calendar id="dataEntrada"
+											value="#{calendarioEstadiaMB.estadia.dataEntrada}"
+											required="true" showOn="both"
+											requiredMessage="O campo 'Data de Entrada' é obrigatório"
+											locale="pt" pattern="dd/MM/yyyy HH:mm:ss"
+											timeZone="America/Sao_Paulo">
+											<p:ajax event="dateSelect" global="false"
+												onstart="adminMaterial()" />
+										</p:calendar>
+										<p:outputLabel value="Data de Entrada" for="dataEntrada"
+											style="font-weight: bold" />
+										<span class="help-block"> <p:message for="dataEntrada" />
+										</span>
+									</div>
+								</div>
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material icon-left">
+										<p:calendar id="dataSaida"
+											value="#{calendarioEstadiaMB.estadia.dataSaida}"
+											required="true" showOn="both"
+											requiredMessage="O campo 'Data de Saida' é obrigatório"
+											locale="pt" pattern="dd/MM/yyyy HH:mm:ss"
+											timeZone="America/Sao_Paulo">
+											<p:ajax event="dateSelect" global="false"
+												onstart="adminMaterial()" />
+										</p:calendar>
+										<p:outputLabel value="Data de Saida" for="dataSaida"
+											style="font-weight: bold" />
+										<span class="help-block"> <p:message for="dataSaida" />
+										</span>
+									</div>
+								</div>
+
+
+							</div>
+						</p:tab>
+
+						<p:tab title="Custos">
+							<div class="row  ui-fluid">
+
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material icon-left">
+										<p:inputText id="racao" maxlength="8" size="10"
+											value="#{calendarioEstadiaMB.estadia.gastoRacao}"
+											required="true"
+											requiredMessage="O campo 'Gasto com ração' é obrigatório"
+											validatorMessage="Informe um valor entre 0,00 e 99999.99 para o campo preço">
+											<!-- Edição da mensagem do validador -->
+											<f:validateDoubleRange minimum="0.00" maximum="99999.99" />
+											<!--Validador para campo Double,bigdecimal...  -->
+											<f:convertNumber locale="pt_BR" minFractionDigits="2" />
+											<!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+
+											<i id="fa" class="fa fa-usd"
+												style="font-size: 20px; margin-top: 10px" />
+											<p:keyFilter regEx="/[0-9_,]/i" />
+
+											<p:ajax event="keyup" update="total"
+												listener="#{calendarioEstadiaMB.somaValores()}" delay="1000" />
+
+										</p:inputText>
+										<p:outputLabel value="Gasto com ração" for="racao"
+											style="font-weight: bold" />
+										<span class="help-block"> <p:message for="racao" />
+										</span>
+									</div>
+								</div>
+
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material icon-left">
+										<p:inputText id="vacina" maxlength="8" size="10"
+											value="#{calendarioEstadiaMB.estadia.gastoVacina}"
+											required="true"
+											requiredMessage="O campo 'Gasto com vacina' é obrigatório"
+											validatorMessage="Informe um valor entre 0,00 e 99999.99 para o campo preço">
+											<!-- Edição da mensagem do validador -->
+											<f:validateDoubleRange minimum="0.00" maximum="99999.99" />
+											<!--Validador para campo Double,bigdecimal...  -->
+											<f:convertNumber locale="pt_BR" minFractionDigits="2" />
+											<!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+
+											<i id="fa" class="fa fa-usd"
+												style="font-size: 20px; margin-top: 10px" />
+											<p:keyFilter regEx="/[0-9_,]/i" />
+
+											<p:ajax event="keyup" update="total"
+												listener="#{calendarioEstadiaMB.somaValores()}" delay="1000" />
+
+										</p:inputText>
+										<p:outputLabel value="Gasto com vacina" for="vacina"
+											style="font-weight: bold" />
+										<span class="help-block"> <p:message for="vacina" />
+										</span>
+									</div>
+								</div>
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material icon-left">
+										<p:inputText id="outros" maxlength="8" size="10"
+											value="#{calendarioEstadiaMB.estadia.gastoOutros}"
+											required="true"
+											requiredMessage="O campo 'Outros gastos' é obrigatório"
+											validatorMessage="Informe um valor entre 0,00 e 99999.99 para o campo preço">
+											<!-- Edição da mensagem do validador -->
+											<f:validateDoubleRange minimum="0.00" maximum="99999.99" />
+											<!--Validador para campo Double,bigdecimal...  -->
+											<f:convertNumber locale="pt_BR" minFractionDigits="2" />
+											<!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+
+											<i id="fa" class="fa fa-usd"
+												style="font-size: 20px; margin-top: 10px" />
+											<p:keyFilter regEx="/[0-9_,]/i" />
+
+
+											<p:ajax event="keyup" update="total"
+												listener="#{calendarioEstadiaMB.somaValores()}" delay="1000" />
+
+										</p:inputText>
+										<p:outputLabel value="Outros gastos" for="outros"
+											style="font-weight: bold" />
+										<span class="help-block"> <p:message for="outros" />
+										</span>
+									</div>
+								</div>
+
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material">
+										<p:inputTextarea id="descricao"
+											value="#{calendarioEstadiaMB.estadia.descricao}" />
+										<p:outputLabel value="Descrição de outros gastos"
+											for="descricao" />
+									</div>
+								</div>
+
+
+							</div>
+						</p:tab>
+						<p:tab title="Valores">
+							<div class="row  ui-fluid">
+
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material icon-left">
+										<p:inputText id="valorcobrado" maxlength="8" size="10"
+											value="#{calendarioEstadiaMB.estadia.valorCobrado}"
+											required="true"
+											requiredMessage="O campo 'Valor Cobrado' é obrigatório"
+											validatorMessage="Informe um valor entre 0,00 e 99999.99 para o campo preço">
+											<!-- Edição da mensagem do validador -->
+											<f:validateDoubleRange minimum="0.00" maximum="99999.99" />
+											<!--Validador para campo Double,bigdecimal...  -->
+											<f:convertNumber locale="pt_BR" minFractionDigits="2" />
+											<!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+
+											<i id="fa" class="fa fa-usd"
+												style="font-size: 20px; margin-top: 10px" />
+											<p:keyFilter regEx="/[0-9_,]/i" />
+
+											<p:ajax event="keyup" update="total"
+												listener="#{calendarioEstadiaMB.somaValores()}" delay="1000" />
+
+										</p:inputText>
+										<p:outputLabel value="Valor Cobrado" for="valorcobrado"
+											style="font-weight: bold" />
+										<span class="help-block"> <p:message for="valorcobrado" />
+										</span>
+									</div>
+								</div>
+
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material icon-left">
+										<p:inputText id="desconto" maxlength="8" size="10" 
+											value="#{calendarioEstadiaMB.estadia.desconto}"
+											required="true"
+											requiredMessage="O campo 'Desconto' é obrigatório"
+											validatorMessage="Informe um valor entre 0,00 e 99999.99 para o campo preço">
+											<!-- Edição da mensagem do validador -->
+											<f:validateDoubleRange minimum="0.00" maximum="99999.99" />
+											<!--Validador para campo Double,bigdecimal...  -->
+											<f:convertNumber locale="pt_BR" minFractionDigits="2" />
+											<!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+
+											<i id="fa" class="fa fa-usd"
+												style="font-size: 20px; margin-top: 10px" />
+											<p:keyFilter regEx="/[0-9_,]/i" />
+
+											<p:ajax event="keyup" update="total"
+												listener="#{calendarioEstadiaMB.somaValores()}" delay="1000" />
+
+										</p:inputText>
+										<p:outputLabel value="Desconto" for="desconto"
+											style="font-weight: bold" />
+										<span class="help-block"> <p:message for="desconto" />
+										</span>
+									</div>
+								</div>
+
+								<p:spacer width="2" />
+								<div class="ui-g-12 ui-sm-12">
+									<p:outputLabel value="Total" style="font-weight: bold" />
+									<p></p>
+									<h:outputText id="total"
+										value="#{calendarioEstadiaMB.estadia.total}"
+										style="font-size:40px;font-weight: bold">
+										<f:convertNumber locale="pt_BR" minFractionDigits="2"
+											pattern="R$ 0.00" />
+									</h:outputText>
+								</div>
+
+							</div>
+							<p:spacer height="15" />
+						</p:tab>
+					</p:tabView>
+
+					<div id="main-buttons">
+					<div class="col-sm-12 align-center">
+						<p:commandButton value="Abrir Estadia"
+							update="@form :formEvento:calendario :formEvento:mensagem"
+							action="#{calendarioEstadiaMB.abriEstadia()}" icon="fa fa-check"
+							oncomplete="PF('dialogoCadastro').hide();"
+							styleClass="btn-lg btn-primary btn-material " />
+							
+						</div>	
+					</div>
+				</div>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="dialogoAlteracao" styleClass="box-primary box-solid"
+			header="Estadia - Alterar ou Fechar" draggable="false"
+			resizable="false" showEffect="clip" hideEffect="clip" closable="true"
+			responsive="true" width="360">
+			<h:form id="formCadastroAlteracao">
+				<div class="box box-primary">
+					<p:spacer width="5" />
+					<p:tabView id="cad2" cache="false">
+						<p:tab title="Dados da Estadia">
+							<div class="row  ui-fluid">
+
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material">
+										<p:selectOneMenu id="animal" filter="true"
+											value="#{calendarioEstadiaMB.estadia.animal}" disabled="true"
+											required="true"
+											requiredMessage="O campo 'Animal' é obrigatório">
+											<f:selectItem noSelectionOption="true"
+												itemLabel="Selecione um animal" />
+											<f:selectItems value="#{calendarioEstadiaMB.animais}" />
+										</p:selectOneMenu>
+										<p:outputLabel value="Animal" for="animal"
+											style="font-weight: bold" />
+										<span class="help-block"> <p:message for="animal" />
+										</span>
+									</div>
+								</div>
+
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material">
+										<p:selectOneMenu id="local" filter="true"
+											value="#{calendarioEstadiaMB.estadia.local}"
+											disabled="#{calendarioEstadiaMB.estadia.status eq false}"
+											required="true"
+											requiredMessage="O campo 'Local' é obrigatório">
+											<f:selectItem noSelectionOption="true"
+												itemLabel="Selecione um local" />
+											<f:selectItems value="#{calendarioEstadiaMB.locais}" />
+										</p:selectOneMenu>
+										<p:outputLabel value="Local" for="local"
+											style="font-weight: bold" />
+										<span class="help-block"> <p:message for="local" />
+										</span>
+									</div>
+								</div>
+
+
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material icon-left">
+										<p:calendar id="dataEntrada"
+											value="#{calendarioEstadiaMB.estadia.dataEntrada}"
+											required="true" showOn="both"
+											disabled="#{calendarioEstadiaMB.estadia.status eq false}"
+											requiredMessage="O campo 'Data de Entrada' é obrigatório"
+											locale="pt" pattern="dd/MM/yyyy HH:mm:ss"
+											timeZone="America/Sao_Paulo">
+											<p:ajax event="dateSelect" global="false"
+												onstart="adminMaterial()" />
+										</p:calendar>
+										<p:outputLabel value="Data de Entrada" for="dataEntrada"
+											style="font-weight: bold" />
+										<span class="help-block"> <p:message for="dataEntrada" />
+										</span>
+									</div>
+								</div>
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material icon-left">
+										<p:calendar id="dataSaida"
+											value="#{calendarioEstadiaMB.estadia.dataSaida}"
+											required="true" showOn="both"
+											disabled="#{calendarioEstadiaMB.estadia.status eq false}"
+											requiredMessage="O campo 'Data de Saida' é obrigatório"
+											locale="pt" pattern="dd/MM/yyyy HH:mm:ss"
+											timeZone="America/Sao_Paulo">
+											<p:ajax event="dateSelect" global="false"
+												onstart="adminMaterial()" />
+										</p:calendar>
+										<p:outputLabel value="Data de Saida" for="dataSaida"
+											style="font-weight: bold" />
+										<span class="help-block"> <p:message for="dataSaida" />
+										</span>
+									</div>
+								</div>
+							</div>
+						</p:tab>
+
+						<p:tab title="Custos">
+							<div class="row  ui-fluid">
+
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material icon-left">
+										<p:inputText id="racao" maxlength="8" size="10"
+											disabled="#{calendarioEstadiaMB.estadia.status eq false}"
+											value="#{calendarioEstadiaMB.estadia.gastoRacao}"
+											required="true"
+											requiredMessage="O campo 'Gasto com ração' é obrigatório"
+											validatorMessage="Informe um valor entre 0,00 e 99999.99 para o campo preço">
+											<!-- Edição da mensagem do validador -->
+											<f:validateDoubleRange minimum="0.00" maximum="99999.99" />
+											<!--Validador para campo Double,bigdecimal...  -->
+											<f:convertNumber locale="pt_BR" minFractionDigits="2" />
+											<!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+
+											<p:ajax event="keyup" update="total"
+												listener="#{calendarioEstadiaMB.somaValores()}" delay="1000" />
+											<i id="fa" class="fa fa-usd"
+												style="font-size: 20px; margin-top: 10px" />
+											<p:keyFilter regEx="/[0-9_,]/i" />
+										</p:inputText>
+										<p:outputLabel value="Gasto com ração" for="racao"
+											style="font-weight: bold" />
+										<span class="help-block"> <p:message for="racao" />
+										</span>
+									</div>
+								</div>
+
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material icon-left">
+										<p:inputText id="vacina" maxlength="8" size="10"
+											disabled="#{calendarioEstadiaMB.estadia.status eq false}"
+											value="#{calendarioEstadiaMB.estadia.gastoVacina}"
+											required="true"
+											requiredMessage="O campo 'Gasto com vacina' é obrigatório"
+											validatorMessage="Informe um valor entre 0,00 e 99999.99 para o campo preço">
+											<!-- Edição da mensagem do validador -->
+											<f:validateDoubleRange minimum="0.00" maximum="99999.99" />
+											<!--Validador para campo Double,bigdecimal...  -->
+											<f:convertNumber locale="pt_BR" minFractionDigits="2" />
+											<!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+
+											<p:ajax event="keyup" update="total"
+												listener="#{calendarioEstadiaMB.somaValores()}" delay="1000" />
+											<i id="fa" class="fa fa-usd"
+												style="font-size: 20px; margin-top: 10px" />
+											<p:keyFilter regEx="/[0-9_,]/i" />
+										</p:inputText>
+										<p:outputLabel value="Gasto com vacina" for="vacina"
+											style="font-weight: bold" />
+										<span class="help-block"> <p:message for="vacina" />
+										</span>
+									</div>
+								</div>
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material icon-left">
+										<p:inputText id="outros" maxlength="8" size="10"
+											disabled="#{calendarioEstadiaMB.estadia.status eq false}"
+											value="#{calendarioEstadiaMB.estadia.gastoOutros}"
+											required="true"
+											requiredMessage="O campo 'Outros gastos' é obrigatório"
+											validatorMessage="Informe um valor entre 0,00 e 99999.99 para o campo preço">
+											<!-- Edição da mensagem do validador -->
+											<f:validateDoubleRange minimum="0.00" maximum="99999.99" />
+											<!--Validador para campo Double,bigdecimal...  -->
+											<f:convertNumber locale="pt_BR" minFractionDigits="2" />
+											<!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+
+											<p:ajax event="keyup" update="total"
+												listener="#{calendarioEstadiaMB.somaValores()}" delay="1000" />
+											<i id="fa" class="fa fa-usd"
+												style="font-size: 20px; margin-top: 10px" />
+											<p:keyFilter regEx="/[0-9_,]/i" />
+										</p:inputText>
+										<p:outputLabel value="Outros gastos" for="outros"
+											style="font-weight: bold" />
+										<span class="help-block"> <p:message for="outros" />
+										</span>
+									</div>
+								</div>
+
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material">
+										<p:inputTextarea id="descricao"
+											value="#{calendarioEstadiaMB.estadia.descricao}"
+											disabled="#{calendarioEstadiaMB.estadia.status eq false}" />
+										<p:outputLabel value="Descrição de outros gastos"
+											for="descricao" />
+									</div>
+								</div>
+
+
+							</div>
+						</p:tab>
+						<p:tab title="Valores">
+							<div class="row  ui-fluid">
+
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material icon-left">
+										<p:inputText id="valorcobrado" maxlength="8" size="10"
+											disabled="#{calendarioEstadiaMB.estadia.status eq false}"
+											value="#{calendarioEstadiaMB.estadia.valorCobrado}"
+											required="true"
+											requiredMessage="O campo 'Valor Cobrado' é obrigatório"
+											validatorMessage="Informe um valor entre 0,01 e 99999.99 para o campo preço">
+											<!-- Edição da mensagem do validador -->
+											<f:validateDoubleRange minimum="0.01" maximum="99999.99" />
+											<!--Validador para campo Double,bigdecimal...  -->
+											<f:convertNumber locale="pt_BR" minFractionDigits="2" />
+											<!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+
+											<p:ajax event="keyup" update="total"
+												listener="#{calendarioEstadiaMB.somaValores()}" delay="1000" />
+											<i id="fa" class="fa fa-usd"
+												style="font-size: 20px; margin-top: 10px" />
+											<p:keyFilter regEx="/[0-9_,]/i" />
+										</p:inputText>
+										<p:outputLabel value="Valor Cobrado" for="valorcobrado"
+											style="font-weight: bold" />
+										<span class="help-block"> <p:message for="valorcobrado" />
+										</span>
+									</div>
+								</div>
+
+								<div class="ui-g-12 ui-sm-12">
+									<div class="ui-material icon-left">
+										<p:inputText id="desconto" maxlength="8" size="10"
+											disabled="#{calendarioEstadiaMB.estadia.status eq false}"
+											value="#{calendarioEstadiaMB.estadia.desconto}"
+											required="true"
+											requiredMessage="O campo 'Desconto' é obrigatório"
+											validatorMessage="Informe um valor entre 0,00 e 99999.99 para o campo preço">
+											<!-- Edição da mensagem do validador -->
+											<f:validateDoubleRange minimum="0.00" maximum="99999.99" />
+											<!--Validador para campo Double,bigdecimal...  -->
+											<f:convertNumber locale="pt_BR" minFractionDigits="2" />
+											<!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+
+											<p:ajax event="keyup" update="total"
+												listener="#{calendarioEstadiaMB.somaValores()}" delay="1000" />
+											<i id="fa" class="fa fa-usd"
+												style="font-size: 20px; margin-top: 10px" />
+											<p:keyFilter regEx="/[0-9_,]/i" />
+										</p:inputText>
+										<p:outputLabel value="Desconto" for="desconto"
+											style="font-weight: bold" />
+										<span class="help-block"> <p:message for="desconto" />
+										</span>
+									</div>
+								</div>
+
+								<p:spacer width="2" />
+								<div class="ui-g-12 ui-sm-12">
+									<p:outputLabel value="Total" style="font-weight: bold" />
+									<p></p>
+									<h:outputText id="total"
+										value="#{calendarioEstadiaMB.estadia.total}"
+										style="font-size:40px;font-weight: bold">
+										<f:convertNumber locale="pt_BR" minFractionDigits="2"
+											pattern="R$ 0.00" />
+									</h:outputText>
+								</div>
+
+							</div>
+
+							<p:spacer />
+						</p:tab>
+					</p:tabView>
+
+					<div id="main-buttons">
+                    <div class="col-sm-12 align-center">
+						<p:commandButton value="Alterar Estadia"
+							update="@form :formEvento:calendario  :formEvento:mensagem"
+							rendered="#{calendarioEstadiaMB.estadia.status eq true}"
+							action="#{calendarioEstadiaMB.AlterarEstadia()}"
+							icon="fa fa-pencil-square-o" styleClass="btn-lg btn-primary btn-material "
+							oncomplete="PF('dialogoAlteracao').hide();" />
+
+						<p:commandButton value="Fechar Estadia"
+							update="@form :formEvento:calendario :formEvento:mensagem"
+							rendered="#{calendarioEstadiaMB.estadia.status eq true}"
+							action="#{calendarioEstadiaMB.fecharEstadia()}"
+							icon="fa fa-times" styleClass="btn-lg btn-danger btn-material "
+							oncomplete="PF('dialogoAlteracao').hide();">
+
+							<p:confirm header="Confirmação"
+								message="Confirma o fechamento da estadia? Depois de concluida uma estadia não pode ser mais alterada! e enviar email para: #{calendarioEstadiaMB.estadia.animal.cliente.email}"
+								icon="pi pi-exclamation-triangle" />
+						</p:commandButton>
+                       </div>
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-danger box-solid">
+							<p:commandButton value="Sim" type="button"
+								styleClass="btn-material btn-primary ui-confirmdialog-yes" icon="fa fa-check" />
+							<p:commandButton value="Não" type="button"
+								styleClass="btn-material btn-danger ui-confirmdialog-no" icon="fa fa-close" />
+						</p:confirmDialog>
+
+                     
+
+						<p:outputLabel value="ESTADIA FECHADA"
+							style="font-size:40px;font-weight: bold"
+							rendered="#{calendarioEstadiaMB.estadia.status eq false}" />
+							
+							
+					</div>
+
+
+
+				</div>
+			</h:form>
+		</p:dialog>
+
+
+
+	</ui:define>
+
+</ui:composition>

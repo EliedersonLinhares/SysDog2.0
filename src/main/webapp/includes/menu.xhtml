@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+
+    <ul class="sidebar-menu">
+        <li>
+            <p:link outcome="/index.xhtml">
+                <i class="fa fa-home"></i>
+                <span>Home</span>
+            </p:link>
+        </li>
+        <li class="header">
+            Cadastros
+        </li>
+        
+        <li>
+            <p:link outcome="/pages/usuario/lista-usuario.xhtml" rendered="#{autenticaMB.permitidoExibirMenuParaUsuariosLogados()}">
+                <i class="fa fa-user-circle-o"></i>
+                <span>Usuário</span>
+            </p:link>
+        </li>
+        
+         <li>
+            <p:link outcome="/pages/cliente/lista-cliente.xhtml">
+                <i class="fa fa-user"></i>
+                <span>Cliente</span>
+            </p:link>
+        </li>
+        
+        <li>
+            <p:link outcome="/pages/animal/lista-animal.xhtml">
+                <i class="fa fa-paw"></i>
+                <span>Animal</span>
+            </p:link>
+        </li>
+        
+        <li>
+            <p:link outcome="/pages/local/lista-local.xhtml">
+                <i class="fa fa-building"></i>
+                <span>Local</span>
+            </p:link>
+        </li>
+        <li>
+            <p:link outcome="/pages/despesa/lista-despesa.xhtml">
+                <i class="fa fa-university"></i>
+                <span>Despesa</span>
+            </p:link>
+        </li>
+        
+         <li class="header">
+            Operações
+        </li>
+        <li>
+            <p:link outcome="/pages/estadia/calendario-estadia.xhtml" >
+                <i class="fa fa-calendar"></i>
+                <span>Estadia</span>
+            </p:link>
+        </li>
+        
+        <li class="header">
+            Histórico
+        </li>
+         <li>
+            <p:link outcome="/pages/estadia/lista-estadia.xhtml" >
+                <i class="fa fa-calendar-check-o"></i>
+                <span>Estadia</span>
+            </p:link>
+        </li>
+        
+    </ul>
+
+
+</ui:composition>

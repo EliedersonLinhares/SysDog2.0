@@ -1,0 +1,121 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://github.com/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0.5em 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: auto;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Pesquisa Despesa
+    </ui:define>
+
+    <ui:define name="description">
+        Lista de despesas cadastradas...
+    </ui:define>
+
+    <ui:define name="body">
+       
+
+			<h:form>
+            	<div class="box box-primary">
+                	<div class="box-header with-border">
+                    	<p:commandButton action="cadastro-despesa?faces-redirect=true" ajax="false" icon="fa fa-plus"
+                         	            value="Novo" styleClass="btn-primary btn-material"/>
+                    	<p:spacer width="5"/>
+	                    
+	                    <p:separator/>
+	                    
+	                    
+	                    <p:dataTable id="despesaTable" widgetVar="despesaTable" rows="5" lazy="true"
+	                                 value="#{listaDespesaMB.dataModel}" var="despesa"              			 
+	                                 paginator="true" 	                                 
+	                                 paginatorPosition="bottom"	                                 
+	                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+	                                 
+	                                  rowsPerPageTemplate="5,10,15,20,30">
+                    
+	                        
+	                        <p:column headerText="Nome"
+	                                  filterBy="#{despesa.descricao}" filterMatchMode="contains"
+	                                  sortBy="#{despesa.descricao}"   >
+	                           <h:link value="#{despesa.descricao}" outcome="cadastro-despesa.xhtml" style="font-weight:bold">
+	                               <f:param name="codigo" value="#{despesa.codigo}"/>
+	                           </h:link> 
+	                        </p:column>
+	                        
+	                         <p:column headerText="Tipo" 
+	                                   filterBy="#{despesa.tipo}" filterMatchMode="contains"
+	                                   sortBy="#{despesa.tipo}"
+	                                   priority="3">
+	                            <h:outputLabel value="#{despesa.tipo}" />
+	                        </p:column>	
+	                        
+	                        <p:column headerText="Inclusão" style="text-align: center"
+	                                  sortBy="#{despesa.dataInclusao}" 
+	                                  priority="3">
+	                            <h:outputLabel value="#{despesa.dataInclusao}">
+	                            <f:convertDateTime locale="pt_BR"/>
+	                            </h:outputLabel>
+	                        </p:column>
+	                        <p:column headerText="Vencimento" style="text-align: center"
+	                                  sortBy="#{despesa.dataVencimento}"
+	                                  priority="3">
+	                           <h:outputLabel value="#{despesa.dataVencimento}">
+	                           <f:convertDateTime locale="pt_BR"/>
+	                           </h:outputLabel>
+	                        </p:column>
+	                        
+	                         <p:column headerText="Valor" style="text-align: center"
+	                                   sortBy="#{despesa.valor}"
+	                                   priority="3">
+	                           <h:outputLabel value="#{despesa.valor}">
+	                           <f:convertNumber locale="pt_BR" minFractionDigits="2"/><!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+	                           </h:outputLabel>
+	                        </p:column>
+	                        
+	                         <p:column headerText="Pagamento" style="text-align: center"
+	                                   sortBy="#{despesa.dataPagamento}"
+	                                   priority="3">
+	                           <h:outputLabel value="#{despesa.dataPagamento}">
+	                           <f:convertDateTime locale="pt_BR"/>
+	                           </h:outputLabel>
+	                        </p:column>
+	                        
+	                         <p:column headerText="Status" 
+	                                   sortBy="#{despesa.status}"
+	                                   style="text-align: center">
+	                            <h:link value="#{despesa.status}" outcome="pagamento-despesa.xhtml" disabled="#{despesa.status eq 'PAGO'}">
+	                               <f:param name="codigo" value="#{despesa.codigo}"/>
+	                           </h:link>
+	                        </p:column>	
+	                        	
+	                    </p:dataTable>
+					</div>
+	            </div>
+        	</h:form>
+        	
+
+        
+    </ui:define>
+
+</ui:composition>

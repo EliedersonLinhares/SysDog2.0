@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:adm="http://github.com/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="title">
+     Dados da Estadia
+    </ui:define>
+     <ui:define name="head-end">
+        <style type="text/css">
+            div.ui-material {
+                margin-top: 20px;
+            }
+
+            input:-webkit-autofill {
+                -webkit-box-shadow: 0 0 0 30px white inset;
+            }
+
+
+        </style>
+    </ui:define>
+
+    <ui:define name="body">
+        <f:metadata>
+             <f:viewParam name="codigo" value="#{cadastroEstadiaMB.codigoEstadia}" converter="javax.faces.Long" />
+              <f:event listener="#{cadastroEstadiaMB.inicializar()}" type="preRenderView"></f:event>
+        </f:metadata>
+
+        
+        <h:form id="form" prependId="false">
+        
+     
+            <p:focus/>
+
+			
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <div id="main-buttons" class="hidden-sm hidden-xs">
+                 
+                        
+
+                        <p:commandButton value="Excluir" process="@this"
+                                         action="#{cadastroEstadiaMB.excluir()}"
+                                         icon="fa fa-trash"
+                                         styleClass="btn-material btn-danger">
+                                         <p:confirm header="Confirmação" message="Confirma a exclusão?" icon="pi pi-exclamation-triangle" />     
+                        </p:commandButton>
+                        
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-danger box-solid">
+							<p:commandButton value="Sim" type="button"
+								styleClass="btn-material btn-primary ui-confirmdialog-yes" icon="fa fa-check" />
+							<p:commandButton value="Não" type="button"
+								styleClass="btn-material btn-danger ui-confirmdialog-no" icon="fa fa-close" />
+						</p:confirmDialog>
+
+
+						<p:spacer width="5"/>
+                        <p:commandButton value="Voltar" immediate="true"
+                                         action="lista-estadia?faces-redirect=true"
+                                         process="@this"
+                                         icon="fa fa-arrow-left"
+                                         styleClass="btn-teal btn-material">
+                                         </p:commandButton>
+                      <p:commandButton value="Comprovante"  icon="fa fa-print" 
+                        actionListener="#{cadastroEstadiaMB.imprimir}"  
+                        styleClass="btn-material btn-warning"
+                        ajax="false" 
+                        rendered="#{cadastroEstadiaMB.estadia.status eq false}"/>                   
+                                         
+                                         
+                    </div>
+                   
+                    <p:splitButton value="Ações"   
+                        styleClass="hidden-md hidden-lg btn-primary btn-material ">
+                        <p:menuitem>
+                                <p:commandButton value="Excluir" process="@this"
+                                         action="#{cadastroEstadiaMB.excluir()}"
+                                         icon="fa fa-trash"
+                                         styleClass="btn-material btn-danger">
+                                         <p:confirm header="Confirmação" message="Confirma a exclusão?" icon="ui-icon-danger" />
+                                </p:commandButton>
+                        </p:menuitem>
+                          <p:menuitem >
+                             <p:commandButton value="Voltar" immediate="true"
+                                         action="lista-estadia?faces-redirect=true"
+                                         process="@this"
+                                         icon="fa fa-arrow-left"
+                                         styleClass="btn-teal btn-material">
+                             </p:commandButton>
+                        </p:menuitem>
+                    </p:splitButton>
+                     <p:commandButton value="Comprovante"  icon="fa fa-print" 
+                        actionListener="#{cadastroEstadiaMB.imprimir}"  
+                        styleClass="hidden-md hidden-lg btn-material btn-warning"
+                        ajax="false" 
+                        rendered="#{cadastroEstadiaMB.estadia.status eq false}"/>
+
+              
+                    <p:separator/>  
+                    
+                    <div class="ui-g ui-fluid">
+                    
+                    
+                
+                     <div class="ui-g-6 ui-sm-12">
+                        <p:outputLabel value="Data de Entrada:" for="dataEntrada"  style="font-weight: bold"/><p:spacer width="10"  />
+                        <h:outputText id="dataEntrada" value="#{cadastroEstadiaMB.estadia.dataEntrada}">
+                         <f:convertDateTime locale="pt_BR" pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo"/>
+                        </h:outputText>
+                    </div>
+                    
+                    <div class="ui-g-6 ui-sm-12">
+                         <p:outputLabel value="Data de Saída:" for="dataSaida"  style="font-weight: bold"/><p:spacer width="10"  />
+                        <h:outputText id="dataSaida" value="#{cadastroEstadiaMB.estadia.dataSaida}">
+                         <f:convertDateTime locale="pt_BR" pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo"/>
+                        </h:outputText>
+                    </div>
+                    
+                    <div class="ui-g-6 ui-sm-12">
+                       <p:outputLabel value="Nome do Animal:" for="nomeAnimal"  style="font-weight: bold"/><p:spacer width="10"  />
+                        <h:outputText id="nomeAnimal" value="#{cadastroEstadiaMB.estadia.animal.nome}"/>
+                    </div>
+                    
+                    <div class="ui-g-6 ui-sm-12">    
+                        <p:outputLabel value="Local:" for="local"  style="font-weight: bold"/><p:spacer width="10"  />
+                        <h:outputText id="local" value="#{cadastroEstadiaMB.estadia.local.descricao}"/>
+                    </div>
+                    
+                    <div class="ui-g-6 ui-sm-12">
+                       <p:outputLabel value="Valor Cobrado:" for="valorCobrado"  style="font-weight: bold"/><p:spacer width="10"  />
+                        <h:outputText id="valorCobrado" value="R$ #{cadastroEstadiaMB.estadia.valorCobrado}">
+                        <f:convertNumber locale="pt_BR" minFractionDigits="2"/>
+                        </h:outputText>
+                     </div>
+                     
+                     <div class="ui-g-6 ui-sm-12">   
+                        <p:outputLabel value="Gasto com Ração:" for="gastoRacao"  style="font-weight: bold"/><p:spacer width="10"  />
+                        <h:outputText id="gastoRacao" value="R$ #{cadastroEstadiaMB.estadia.gastoRacao}">
+                        <f:convertNumber locale="pt_BR" minFractionDigits="2"/>
+                        </h:outputText>
+                      </div> 
+                      
+                      <div class="ui-g-6 ui-sm-12"> 
+                        <p:outputLabel value="Gasto com Vacina:" for="gastoVacina"  style="font-weight: bold"/><p:spacer width="10"  />
+                        <h:outputText id="gastoVacina" value="R$ #{cadastroEstadiaMB.estadia.gastoVacina}">
+                        <f:convertNumber locale="pt_BR" minFractionDigits="2"/>
+                        </h:outputText>
+                      </div>
+                      
+                      <div class="ui-g-6 ui-sm-12">  
+                        <p:outputLabel value="Outros gastos:" for="gastoOutros"  style="font-weight: bold"/><p:spacer width="10"  />
+                        <h:outputText id="gastoOutros" value="R$ #{cadastroEstadiaMB.estadia.gastoOutros}">
+                        <f:convertNumber locale="pt_BR" minFractionDigits="2" />
+                        </h:outputText>
+                        </div>
+                        
+                        <div class="ui-g-6 ui-sm-12">
+                         <p:outputLabel value="Descrição dos gastos:" for="descGastos"  style="font-weight: bold"/><p:spacer width="10"  />
+                        <h:outputText id="descGastos" value="#{cadastroEstadiaMB.estadia.descricao}"/>
+                        </div>
+                        
+                        <div class="ui-g-6 ui-sm-12">
+                        <p:outputLabel value="Desconto:" for="desconto"  style="font-weight: bold"/><p:spacer width="10"  />
+                        <h:outputText id="desconto" value="R$ #{cadastroEstadiaMB.estadia.desconto}">
+                        <f:convertNumber locale="pt_BR" minFractionDigits="2" />
+                        </h:outputText>
+                        </div>
+                        
+                        <div class="ui-g-6 ui-sm-12">
+                         <p:outputLabel value="Total:" for="total"  style="font-weight: bold"/><p:spacer width="10"  />
+                        <h:outputText id="total" value="R$ #{cadastroEstadiaMB.estadia.total}">
+                        <f:convertNumber locale="pt_BR" minFractionDigits="2" />
+                        </h:outputText>
+                        </div>
+                        
+                        <div class="ui-g-6 ui-sm-12">
+                         <p:outputLabel value="Status da Estadia:" style="font-weight: bold"/><p:spacer width="10"  />
+                                <p:outputLabel value="CONCLUÍDA"  rendered="#{cadastroEstadiaMB.estadia.status eq false}"  style="color: red"/>
+	                            <p:outputLabel value="ABERTO"  rendered="#{cadastroEstadiaMB.estadia.status eq true}" style="color: blue"/>
+                        </div>
+                    
+           
+                     
+                         
+                        
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

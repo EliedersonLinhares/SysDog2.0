@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:adm="http://github.com/adminfaces"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon.ico']}"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon-16x16.png']}" sizes="16x16"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon-32x32.png']}" sizes="32x32"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon-96x96.png']}" sizes="96x96"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon/favicon-144x144.png']}" sizes="144x144"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+        <meta name="mobile-web-app-capable" content="yes"/>
+        <h:outputStylesheet library="css" name="prism.css"/>
+
+        <style type="text/css">
+            /* below css hides growls in small screens and makes messages visible */
+            @media (max-width: 768px) {
+                
+                body div.ui-growl {
+                    display: none;
+                }
+                
+               body div.ui-messages {
+                    display: block;
+                }
+            }
+            /* below css hides messages in medium/big devices and makes growl visible in such devices */
+            @media (min-width: 769px) {
+              body div.ui-growl {
+                    display: block;
+                }
+              body div.ui-messages {
+                    display: none;
+                }
+            }  
+            body.login-page {
+                background-color: transparent;
+            }
+
+            html {
+                background: url(#{resource[ 'images:bg2.jpg' ]}) no-repeat center center fixed;
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
+                background-size: cover;
+            }
+            
+            @media (max-width: 768px) {
+                html {
+                    background-image: url(#{resource[ 'images:bg2.jpg' ]});
+                }
+            }
+        </style>
+    </h:head>
+
+
+    <h:body styleClass="hold-transition login-page">
+        <div id="loader" class="load-bar" style="display: none">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+        
+        <p:dialog id="adminStatusDialog" modal="true" widgetVar="statusDialog" draggable="false" closable="false"
+                  resizable="false" responsive="true" showHeader="false" appendTo="@(body)">
+            <p:graphicImage library="images" />
+        </p:dialog>
+
+        <div class="login-box ">
+            <div class="login-logo align-center">
+             <div class="row ui-fluid">
+                        <div class="col-sm-12 align-center">
+           <!--   <p:graphicImage value="/resources/images/logo276.png"/>-->
+                <p:outputLabel value="Sysdog" style="color:white;"/>
+                </div>
+                </div>
+            </div>
+            <!-- /.login-logo -->
+            <div class="box login-box-body">
+                <h:form>
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-g-12">
+                            <p class="login-box-msg">Insira suas credenciais </p>
+                            <p:messages escape="false" closable="true" showDetail="true" showSummary="false"/>
+                            <p:growl sticky="true"/>
+                        </div>
+
+                        <div class="ui-g-12">
+                            <div class="material icon-left">
+                                <p:inputText id="email" value="#{autenticaMB.username}" required="true" requiredMessage="O campo 'email é obrigatório'" >
+                                    <i class="fa fa-at" style="font-size: 16px;margin-top: 10px;"/>
+                                </p:inputText>
+                                <p:outputLabel for="email" value="Insira seu e-mail"/>
+                                <p:message for="email"/>
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12">
+                            <div class="material icon-left">
+                                <p:password id="password"  value="#{autenticaMB.password}" required="true" autocomplete="new-password" requiredMessage="O campo 'senha é obrigatório'" >
+                                    <i class="fa fa-lock" style="font-size: 20px;margin-top: 10px"/>
+                                </p:password>
+                                <p:outputLabel for="password" value="Insira sua senha"/>
+                                <p:message for="password"/>
+                            </div>
+                        </div>
+
+
+                        <div class="ui-g-12">
+                            <p:selectBooleanCheckbox itemLabel="Remember Me" value="#{autenticaMB.rememberMe}"/>
+                        </div>
+                        <p:spacer height="10"/>
+                        <div class="ui-g-12">
+                            <p:commandButton styleClass="btn btn-primary  btn-block" 
+                                             action="#{autenticaMB.loginUser}"
+                                             value="Entrar" update="@form"/>
+                                   
+                        </div>
+                        <div class="ui-g-12">
+                            <p:commandButton styleClass="btn btn-primary  btn-block" 
+                                              oncomplete="PF('dialogoReset').show();"
+                                             value="Esqueci a Senha" >
+                             </p:commandButton>   
+                        </div>
+                        
+                        <div class="ui-g-12">
+                            <p:commandButton styleClass="btn btn-primary  btn-block" 
+                                              oncomplete="PF('dialogoConfirmacao').show();"
+                                             value="Confimar Nova Senha" >
+                             </p:commandButton>   
+                        </div>
+                        
+
+                    </div>
+                </h:form>
+
+                
+
+            </div>
+            
+           </div> 
+            
+            <p:dialog widgetVar="dialogoReset" styleClass="box-primary box-solid"
+			header="Alterar Senha" draggable="false"
+			resizable="false" showEffect="clip" hideEffect="clip" closable="true"
+			responsive="true" width="360">
+			<h:form id="alterarSenha">
+			<div class="box box-primary">
+				<div class="ui-g ui-fluid">
+                        <div class="ui-g-12">
+                            <p class="login-box-msg">Insira o email que deseja recuperar a senha </p>
+                            <p:messages escape="false" closable="true" showDetail="true" showSummary="false"/>
+                            <p:growl sticky="true"/>
+                        </div>
+
+                        <div class="ui-g-12">
+                            <div class="material icon-left">
+                                <p:inputText id="email" value="#{autenticaMB.username}" required="true" requiredMessage="O campo 'email é obrigatório'" >
+                                    <i class="fa fa-at" style="font-size: 16px;margin-top: 10px;"/>
+                                </p:inputText>
+                                <p:outputLabel for="email" value="Insira seu e-mail"/>
+                                <p:message for="email"/>
+                            </div>
+                        </div>
+
+                      
+                        <p:spacer height="10"/>
+                        <div class="ui-g-12">
+                            <p:commandButton styleClass="btn btn-primary  btn-block" 
+                                              action="#{autenticaMB.iniciaAlteraçãodeSenha}"
+                                             value="Esqueci a Senha" update="@form">
+                                             
+                                             <p:confirm header="Confirmação"
+								message="Confirma o inicio da alteração da senha "
+								icon="pi pi-exclamation-triangle" />
+                                             </p:commandButton>
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-danger box-solid">
+							<p:commandButton value="Sim" type="button"
+								styleClass="btn-material btn-primary ui-confirmdialog-yes" icon="fa fa-check" />
+							<p:commandButton value="Não" type="button"
+								styleClass="btn-material btn-danger ui-confirmdialog-no" icon="fa fa-close" />
+						     </p:confirmDialog>        
+                        </div>
+                         <div class="ui-g-12">
+                            <p:commandButton styleClass="btn btn-primary  btn-block" 
+                                           immediate="true"
+							                oncomplete="PF('dialogoReset').hide();"      process="@this"
+                                             value="fechar" />
+                        </div>
+                    </div>
+				
+				</div>
+            
+            </h:form>
+            </p:dialog>
+            
+                  <p:dialog widgetVar="dialogoConfirmacao" styleClass="box-primary box-solid"
+			header="Confirmação de Alteração" draggable="false"
+			resizable="false" showEffect="clip" hideEffect="clip" closable="true"
+			responsive="true" width="360">
+			<h:form id="confirmarSenha">
+			<div class="box box-primary">
+				<div class="ui-g ui-fluid">
+                        <div class="ui-g-12">
+                            <p class="login-box-msg">Insira o codigo recebido por email e a nova senha que deseja usar</p>
+                            <p:messages escape="false" closable="true" showDetail="true" showSummary="false"/>
+                            <p:growl sticky="true"/>
+                        </div>
+                        
+                         <div class="ui-g-12">
+                            <div class="material icon-left">
+                                <p:inputText id="codigo" value="#{autenticaMB.hash}" required="true" requiredMessage="O campo 'código' é obrigatório" >
+                                    <i class="fa fa-check" style="font-size: 16px;margin-top: 10px;"/>
+                                </p:inputText>
+                                <p:outputLabel for="codigo" value="Insira o código ou copie e cole aqui"/>
+                                <p:message for="codigo"/>
+                            </div>
+                        </div>
+                        
+
+                    <div class="ui-g-12">
+                            <div class="material icon-left">
+                                <p:password id="newpassword"  value="#{autenticaMB.novaSenha}" required="true" autocomplete="new-password" requiredMessage="O campo 'nova senha' é obrigatório"
+                                feedback="true" promptLabel="Digite a senha" weakLabel="Fraca" goodLabel="Boa" strongLabel="Forte"> >
+                                    <i class="fa fa-lock" style="font-size: 20px;margin-top: 10px" />
+                                </p:password>
+                                <p:outputLabel for="newpassword" value="Insira a nova senha"/>
+                                <p:message for="newpassword"/>
+                            </div>
+                        </div>
+
+
+                        <div class="ui-g-12">
+                            <div class="material icon-left">
+                                <p:password id="confirmpassword"  value="#{autenticaMB.confirmarSenha}" required="true" autocomplete="new-password" requiredMessage="O campo 'confirmar senha' é obrigatório" 
+                                feedback="true" promptLabel="Digite a senha" weakLabel="Fraca" goodLabel="Boa" strongLabel="Forte">
+                                    <i class="fa fa-lock" style="font-size: 20px;margin-top: 10px"/>
+                                </p:password>
+                                <p:outputLabel for="confirmpassword" value="Insira novamente a senha a ser usada"/>
+                                <p:message for="confirmpassword"/>
+                            </div>
+                        </div>
+
+                      
+                        <p:spacer height="10"/>
+                        <div class="ui-g-12">
+                            <p:commandButton styleClass="btn btn-primary  btn-block" 
+                                              action="#{autenticaMB.confirmaAlteraçãodeSenha}"
+                                             value="Salvar" update="@form">
+                                             
+                                             <p:confirm header="Confirmação"
+								message="Confirma a alteração da senha?"
+								icon="pi pi-exclamation-triangle" />
+                                             </p:commandButton>
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-danger box-solid">
+							<p:commandButton value="Sim" type="button"
+								styleClass="btn-material btn-primary ui-confirmdialog-yes" icon="fa fa-check" />
+							<p:commandButton value="Não" type="button"
+								styleClass="btn-material btn-danger ui-confirmdialog-no" icon="fa fa-close" />
+						     </p:confirmDialog>        
+                        </div>
+                         <div class="ui-g-12">
+                            <p:commandButton styleClass="btn btn-primary  btn-block" 
+                                           immediate="true"
+							                oncomplete="PF('dialogoConfirmacao').hide();"      process="@this"
+                                             value="fechar" />
+                        </div>
+                    </div>
+				
+				</div>
+            
+            </h:form>
+            </p:dialog>
+     
+            
+            
+            
+            <!-- /.login-box-body -->
+        
+
+      
+        <h:outputScript library="js" name="prism.js"  target="head"/>
+        <h:outputScript library="js" name="admintemplate.js"  target="head"/>
+        <adm:ripple/>
+
+    </h:body>
+</html>

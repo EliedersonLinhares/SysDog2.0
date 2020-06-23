@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+		<p:outputLabel value="Cadastro de Cliente" style="font-weight:normal"
+			rendered="#{cadastroClienteMB.codigoCliente eq null}" />
+		<p:outputLabel value="Alteração de Cliente" style="font-weight:normal"
+			rendered="#{cadastroClienteMB.codigoCliente != null}" />
+	</ui:define>
+	<ui:define name="head-end">
+		<style type="text/css">
+div.ui-material {
+	margin-top: 20px;
+}
+
+input:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0 30px white inset;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="body">
+		<f:metadata>
+			<f:viewParam name="codigo" value="#{cadastroClienteMB.codigoCliente}"
+				converter="javax.faces.Long" />
+			<f:event listener="#{cadastroClienteMB.inicializar()}"
+				type="preRenderView"></f:event>
+		</f:metadata>
+
+		<h:form id="form" prependId="false">
+
+
+			<p:focus />
+
+
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<div id="main-buttons" class="hidden-sm hidden-xs">
+						<p:commandButton value="Salvar" update="@form"
+							action="#{cadastroClienteMB.salvar()}" icon="fa fa-floppy-o"
+							styleClass="btn-primary btn-material">
+
+						</p:commandButton>
+						<p:spacer width="5" />
+
+					
+
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+							styleClass="box-danger box-solid">
+							<p:commandButton value="Sim" type="button"
+								styleClass="btn-material btn-primary ui-confirmdialog-yes"
+								icon="fa fa-check" />
+							<p:commandButton value="Não" type="button"
+								styleClass="btn-material btn-danger ui-confirmdialog-no"
+								icon="fa fa-close" />
+						</p:confirmDialog>
+
+
+						<p:spacer width="5" />
+						<p:commandButton value="Voltar" immediate="true"
+							action="lista-cliente?faces-redirect=true" process="@this"
+							icon="fa fa-arrow-left" styleClass="btn-teal btn-material">
+
+						</p:commandButton>
+
+					</div>
+
+					<p:splitButton value="Salvar" update="@form" icon="fa fa-floppy-o"
+						action="#{cadastroClienteMB.salvar()}"
+						styleClass="hidden-md hidden-lg btn-primary btn-material">
+					
+						<p:separator />
+						<p:menuitem>
+							<p:commandButton value="Voltar" immediate="true"
+								action="lista-cliente?faces-redirect=true" process="@this"
+								icon="fa fa-arrow-left" styleClass="btn-teal btn-material">
+							</p:commandButton>
+						</p:menuitem>
+					</p:splitButton>
+
+
+
+					<p:separator />
+
+					<div class="ui-g ui-fluid">
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:inputText id="nome" value="#{cadastroClienteMB.cliente.nome}"
+									required="true"
+									requiredMessage="O campo 'Nome do Cliente' é obrigatório"
+									maxlength="120" />
+								<p:outputLabel value="Nome do Cliente" for="nome"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="nome" />
+								</span>
+
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:inputText id="cpfcnpj"
+									value="#{cadastroClienteMB.cliente.cpfOuCnpj}" required="true"
+									requiredMessage="O campo 'CPF ou CNPJ do Cliente' é obrigatório"
+									maxlength="50" />
+								<p:outputLabel value="CPF ou CNPJ do Cliente" for="cpfcnpj"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="cpfcnpj" />
+								</span>
+
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:inputText id="endereco"
+									value="#{cadastroClienteMB.cliente.endereco}" required="true"
+									requiredMessage="O campo 'Endereço do Cliente' é obrigatório"
+									maxlength="150" />
+								<p:outputLabel value="Endereço do Cliente" for="endereco"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="endereco" />
+								</span>
+
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:autoComplete id="bairro" maxlength="30" maxResults="5"
+									minQueryLength="5" queryDelay="1000"
+									value="#{cadastroClienteMB.cliente.bairro}" required="true"
+									requiredMessage="O campo 'Bairro' é obrigatório"
+									completeMethod="#{cadastroClienteMB.pesquisarDescricoesBairro}" />
+								<p:outputLabel value="Bairro" for="bairro"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="bairro" />
+								</span>
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:autoComplete id="cidade" maxlength="50" maxResults="5"
+									minQueryLength="5" queryDelay="1000"
+									value="#{cadastroClienteMB.cliente.cidade}" required="true"
+									requiredMessage="O campo 'Cidade' é obrigatório"
+									completeMethod="#{cadastroClienteMB.pesquisarDescricoesCidade}" />
+								<p:outputLabel value="Cidade" for="cidade"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="cidade" />
+								</span>
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:inputMask id="estado" mask="aa"
+									style="text-transform:uppercase"
+									value="#{cadastroClienteMB.cliente.estado}" maxlength="2"
+									required="true"
+									requiredMessage="O campo 'Estado' é obrigatório" />
+								<p:outputLabel value="Estado" for="estado"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="estado" />
+								</span>
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:inputMask id="cep" mask="99999-999"
+									value="#{cadastroClienteMB.cliente.cep}" required="true"
+									requiredMessage="O campo 'CEP' é obrigatório" />
+								<p:outputLabel value="CEP" for="cep" style="font-weight: bold" />
+								<span class="help-block"> <p:message for="cep" />
+								</span>
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material icon-left">
+								<p:inputMask id="tel" mask="(99)9999-9999"
+									value="#{cadastroClienteMB.cliente.telefone}">
+									<i id="fa" class="fa fa-phone"
+										style="font-size: 20px; margin-top: 10px" />
+								</p:inputMask>
+								<p:outputLabel value="Telefone" for="tel"
+									style="font-weight: bold" />
+							</div>
+						</div>
+
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material icon-left">
+								<p:inputMask id="cel" mask="(99)99999-9999"
+									value="#{cadastroClienteMB.cliente.celular}" required="true"
+									requiredMessage="O campo 'Celular' é obrigatório">
+									<i id="fa" class="fa fa-phone"
+										style="font-size: 20px; margin-top: 10px" />
+								</p:inputMask>
+								<p:outputLabel value="Celular" for="cel"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="cel" />
+								</span>
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material icon-left">
+								<p:inputMask id="cel2" mask="(99)99999-9999"
+									value="#{cadastroClienteMB.cliente.celular2}">
+									<i id="fa" class="fa fa-phone"
+										style="font-size: 20px; margin-top: 10px" />
+								</p:inputMask>
+								<p:outputLabel value="Celular 2" for="cel2"
+									style="font-weight: bold" />
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material icon-left">
+								<p:inputText id="email"
+									value="#{cadastroClienteMB.cliente.email}">
+									<i id="fa" class="fa fa-at"
+										style="font-size: 20px; margin-top: 10px" />
+								</p:inputText>
+								<p:outputLabel value="Email" for="email"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="email" />
+								</span>
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material icon-left">
+								<p:calendar id="dataCadastro"
+									value="#{cadastroClienteMB.cliente.dataCadastro}"
+									required="true" showOn="both"
+									requiredMessage="O campo 'Data de Cadastro' é obrigatório"
+									locale="pt" pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo">
+									<p:ajax event="dateSelect" global="false"
+										onstart="adminMaterial()" />
+								</p:calendar>
+								<p:outputLabel value="Data de Cadastro" for="dataCadastro"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="dataCadastro" />
+								</span>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

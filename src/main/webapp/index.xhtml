@@ -1,0 +1,23 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="WEB-INF/templates/template.xhtml"
+                xmlns:f="http://java.sun.com/jsf/core">
+                  
+    <ui:define name="head-end">
+        <ui:param name="renderBreadCrumb" value="false"/>
+    </ui:define>
+
+    <ui:define name="title">
+       
+
+        <h2 class="align-center">
+       
+        </h2>
+
+    </ui:define>
+
+<ui:define name="body">
+      <ui:include src="pages/dashboard/dashboard.xhtml"/>
+  </ui:define>      
+</ui:composition>

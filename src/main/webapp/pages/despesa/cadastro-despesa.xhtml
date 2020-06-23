@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+		<p:outputLabel value="Cadastro de Despesa" style="font-weight:normal"
+			rendered="#{cadastroDespesaMB.codigoDespesa eq null}" />
+		<p:outputLabel value="Alteração de Despesa" style="font-weight:normal"
+			rendered="#{cadastroDespesaMB.codigoDespesa != null}" />
+	</ui:define>
+	<ui:define name="head-end">
+		<style type="text/css">
+div.ui-material {
+	margin-top: 20px;
+}
+
+input:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0 30px white inset;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="body">
+		<f:metadata>
+			<f:viewParam name="codigo" value="#{cadastroDespesaMB.codigoDespesa}"
+				converter="javax.faces.Long" />
+			<f:event listener="#{cadastroDespesaMB.inicializar()}"
+				type="preRenderView"></f:event>
+		</f:metadata>
+
+		<h:form id="form" prependId="false">
+
+
+			<p:focus />
+
+
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<div id="main-buttons" class="hidden-sm hidden-xs">
+						<p:commandButton value="Salvar" update="@form"
+							action="#{cadastroDespesaMB.salvar()}" icon="fa fa-floppy-o"
+							styleClass="btn-primary btn-material">
+						</p:commandButton>
+						<p:spacer width="5" />
+
+						<p:commandButton value="Excluir" process="@this"
+							rendered="#{cadastroDespesaMB.despesa.edicao}"
+							action="#{cadastroDespesaMB.excluir()}" icon="fa fa-trash"
+							styleClass="btn-danger btn-material">
+							<p:confirm header="Confirmação" message="Confirma a exclusão?"
+								icon="pi pi-exclamation-triangle" />
+						</p:commandButton>
+
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+							styleClass="box-danger box-solid">
+							<p:commandButton value="Sim" type="button"
+								styleClass="btn-material btn-primary ui-confirmdialog-yes"
+								icon="fa fa-check" />
+							<p:commandButton value="Não" type="button"
+								styleClass="btn-material btn-danger ui-confirmdialog-no"
+								icon="fa fa-close" />
+						</p:confirmDialog>
+
+
+						<p:spacer width="5" />
+						<p:commandButton value="Voltar" immediate="true"
+							action="lista-despesa?faces-redirect=true" process="@this"
+							icon="fa fa-arrow-left" styleClass="btn-teal btn-material">
+
+						</p:commandButton>
+
+					</div>
+
+					<p:splitButton value="Salvar" update="@form" icon="fa fa-floppy-o"
+						action="#{cadastroDespesaMB.salvar()}"
+						styleClass="hidden-md hidden-lg btn-primary btn-material">
+						<p:menuitem>
+							<p:commandButton value="Excluir"
+								rendered="#{cadastroDespesaMB.despesa.edicao}"
+								action="#{cadastroDespesaMB.excluir()}" process="@this"
+								icon="fa fa-trash" styleClass="btn-danger btn-material">
+								<p:confirm header="Confirmação" message="Confirma a exclusão?" icon="pi pi-exclamation-triangle" />  
+							</p:commandButton>	
+						</p:menuitem>
+						<p:separator />
+						<p:menuitem>
+							<p:commandButton value="Voltar" immediate="true"
+								action="lista-despesa?faces-redirect=true" process="@this"
+								icon="fa fa-arrow-left" styleClass="btn-teal btn-material">
+							</p:commandButton>
+						</p:menuitem>
+					</p:splitButton>
+
+
+
+					<p:separator />
+
+					<div class="ui-g ui-fluid">
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:inputText id="nome"
+									value="#{cadastroDespesaMB.despesa.descricao}" required="true"
+									requiredMessage="O campo 'Nome do Despesa' é obrigatório"
+									maxlength="50" />
+								<p:outputLabel value="Nome do Despesa" for="nome"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="nome" />
+								</span>
+
+							</div>
+						</div>
+
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:selectOneMenu id="tipo"
+									value="#{cadastroDespesaMB.despesa.tipo}" required="true"
+									requiredMessage="O campo 'Tipo' é obrigatório">
+									<f:selectItem noSelectionOption="true"
+										itemLabel="Selecione o tipo" />
+									<f:selectItem itemLabel="Taxas de Propriedade(luz,Água,Gás)"
+										itemValue="Taxas de Propriedade(luz,Água,Gás)" />
+									<f:selectItem itemLabel="Telefone e Internet"
+										itemValue="Telefone e Internet" />
+									<f:selectItem itemLabel="Materiais de Limpeza"
+										itemValue="Materiais de Limpeza" />
+									<f:selectItem itemLabel="Materiais de Escritório"
+										itemValue="Materiais de Escritório" />
+									<f:selectItem itemLabel="Seguros e Sistemas de segurança"
+										itemValue="Seguros e Sistemas de segurança" />
+									<f:selectItem itemLabel="Legais e Jurídico"
+										itemValue="Legais e Jurídico" />
+									<f:selectItem itemLabel="Pró Labore" itemValue="Pró Labore" />
+									<f:selectItem itemLabel="Salário" itemValue="Salário" />
+									<f:selectItem itemLabel="Aluguel" itemValue="Aluguel" />
+									<f:selectItem itemLabel="Outros" itemValue="Outros" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Tipo de despesa" for="tipo"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="tipo" />
+								</span>
+
+							</div>
+						</div>
+
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material icon-left">
+								<p:calendar id="dataVencimento"
+									value="#{cadastroDespesaMB.despesa.dataVencimento}"
+									required="true" showOn="both"
+									requiredMessage="O campo 'Data de Vencimento' é obrigatório"
+									locale="pt" pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo">
+									<p:ajax event="dateSelect" global="false"
+										onstart="adminMaterial()" />
+								</p:calendar>
+								<p:outputLabel value="Data de Vencimento" for="dataVencimento"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="dataVencimento" />
+								</span>
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material icon-left">
+								<p:inputText id="valor" maxlength="8" size="10"
+									value="#{cadastroDespesaMB.despesa.valor}" required="true"
+									requiredMessage="O campo 'Valor' é obrigatório"
+									validatorMessage="Informe um valor entre 0,01 e 99999.99 para o campo preço">
+									<!-- Edição da mensagem do validador -->
+									<f:validateDoubleRange minimum="0.01" maximum="99999.99" />
+									<!--Validador para campo Double,bigdecimal...  -->
+									<f:convertNumber locale="pt_BR" minFractionDigits="2" />
+									<!--Conversão para moeda corrente no brasil(uso da virgula)  -->
+
+									<i id="fa" class="fa fa-usd"
+										style="font-size: 20px; margin-top: 10px" />
+									<p:keyFilter regEx="/[0-9_,]/i" />
+								</p:inputText>
+								<p:outputLabel value="Valor" for="valor"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="valor" />
+								</span>
+							</div>
+						</div>
+
+
+
+
+
+					</div>
+				</div>
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+		<p:outputLabel value="Cadastro de Animal" style="font-weight:normal"
+			rendered="#{cadastroAnimalMB.codigoAnimal eq null}" />
+		<p:outputLabel value="Alteração de Animal" style="font-weight:normal"
+			rendered="#{cadastroAnimalMB.codigoAnimal != null}" />
+	</ui:define>
+	<ui:define name="head-end">
+		<style type="text/css">
+div.ui-material {
+	margin-top: 20px;
+}
+
+input:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0 30px white inset;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="body">
+		<f:metadata>
+			<f:viewParam name="codigo" value="#{cadastroAnimalMB.codigoAnimal}"
+				converter="javax.faces.Long" />
+			<f:event listener="#{cadastroAnimalMB.inicializar()}"
+				type="preRenderView"></f:event>
+		</f:metadata>
+
+
+		<h:form id="form" prependId="false" enctype="multipart/form-data">
+
+
+			<p:focus />
+
+
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<div id="main-buttons" class="hidden-sm hidden-xs">
+						<p:commandButton value="Salvar" update="@form"
+							action="#{cadastroAnimalMB.salvar()}" icon="fa fa-floppy-o"
+							styleClass="btn-primary btn-material">
+
+						</p:commandButton>
+						<p:spacer width="5" />
+                    
+				
+
+
+						<p:spacer width="5" />
+						<p:commandButton value="Voltar" immediate="true"
+							action="lista-animal?faces-redirect=true" process="@this"
+							icon="fa fa-arrow-left" styleClass="btn-teal btn-material">
+
+						</p:commandButton>
+
+					</div>
+
+					<p:splitButton value="Salvar" update="@form" icon="fa fa-floppy-o"
+						action="#{cadastroAnimalMB.salvar()}"
+						styleClass="hidden-md hidden-lg btn-primary btn-material">
+						
+						<p:separator />
+						<p:menuitem>
+							<p:commandButton value="Voltar" immediate="true"
+								action="lista-animal?faces-redirect=true" process="@this"
+								icon="fa fa-arrow-left" styleClass="btn-teal btn-material">
+							</p:commandButton>
+						</p:menuitem>
+					</p:splitButton>
+
+
+
+
+					<p:separator />
+
+					<div class="ui-g ui-fluid">
+
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:selectOneMenu id="cliente" filter="true"
+									value="#{cadastroAnimalMB.animal.cliente}" required="true"
+									requiredMessage="O campo 'Cliente' é obrigatório">
+									<f:selectItem noSelectionOption="true"
+										itemLabel="Selecione um Cliente" />
+									<f:selectItems value="#{cadastroAnimalMB.clientes}" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Cliente" for="cliente"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="cliente" />
+								</span>
+							</div>
+						</div>
+
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:inputText id="nome" value="#{cadastroAnimalMB.animal.nome}"
+									required="true"
+									requiredMessage="O campo 'Nome do Animal' é obrigatório"
+									maxlength="120" />
+								<p:outputLabel value="Nome do Animal" for="nome"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="nome" />
+								</span>
+
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:selectOneMenu id="tipo"
+									value="#{cadastroAnimalMB.animal.tipo}" required="true"
+									requiredMessage="O campo 'Tipo' é obrigatório">
+									<f:selectItem noSelectionOption="true"
+										itemLabel="Selecione o tipo" />
+									<f:selectItem itemLabel="Cachorro" itemValue="Cachorro" />
+									<f:selectItem itemLabel="Outros" itemValue="Outros" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Tipo de animal" for="tipo"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="tipo" />
+								</span>
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:autoComplete id="raca" maxlength="50" maxResults="5"
+									minQueryLength="5" queryDelay="1000"
+									value="#{cadastroAnimalMB.animal.raca}" required="true"
+									requiredMessage="O campo 'Raça' é obrigatório"
+									completeMethod="#{cadastroAnimalMB.pesquisarDescricoesRaca}" />
+								<p:outputLabel value="Raça" for="raca" style="font-weight: bold" />
+								<span class="help-block"> <p:message for="raca" />
+								</span>
+							</div>
+						</div>
+
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:selectOneMenu id="sexo"
+									value="#{cadastroAnimalMB.animal.sexo}" required="true"
+									requiredMessage="O campo 'Sexo' é obrigatório">
+									<f:selectItem noSelectionOption="true"
+										itemLabel="Selecione o Sexo" />
+									<f:selectItem itemLabel="Macho" itemValue="Macho" />
+									<f:selectItem itemLabel="Femêa" itemValue="Fêmea" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Sexo do Animal" for="sexo"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="sexo" />
+								</span>
+
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:inputText id="idade" value="#{cadastroAnimalMB.animal.idade}"
+									required="true"
+									requiredMessage="O campo 'Idade do Animal' é obrigatório"
+									maxlength="2" size="2"
+									validatorMessage="Informe um valor entre 1 e 25 para o campo 'Idade do Animal'">
+									<f:validateLongRange minimum="1" maximum="25" />
+									<p:keyFilter regEx="/[0-9_]/i" />
+								</p:inputText>
+								<p:outputLabel value="Idade do Animal" for="idade"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="idade" />
+								</span>
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:selectOneMenu id="tamanho"
+									value="#{cadastroAnimalMB.animal.tamanho}" required="true"
+									requiredMessage="O campo 'Tamanho' é obrigatório">
+									<f:selectItem noSelectionOption="true"
+										itemLabel="Selecione o Tamanho" />
+									<f:selectItem itemLabel="Mini" itemValue="Mini" />
+									<f:selectItem itemLabel="Pequeno" itemValue="Pequeno" />
+									<f:selectItem itemLabel="Médio" itemValue="Medio" />
+									<f:selectItem itemLabel="Grande" itemValue="Grande" />
+									<f:selectItem itemLabel="Gigante" itemValue="Gigante" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Tamanho do Animal" for="tamanho"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="tamanho" />
+								</span>
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:selectOneMenu id="castrado"
+									value="#{cadastroAnimalMB.animal.castrado}" required="true"
+									requiredMessage="O campo 'Castrado' é obrigatório">
+									<f:selectItem noSelectionOption="true"
+										itemLabel="O animal é castrado?" />
+									<f:selectItem itemValue="false" itemLabel="Não" />
+									<f:selectItem itemValue="true" itemLabel="Sim" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Castrado" for="castrado"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="castrado" />
+								</span>
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:selectOneMenu id="vacina"
+									value="#{cadastroAnimalMB.animal.vacinaemdia}" required="true"
+									requiredMessage="O campo 'Vacina em dia' é obrigatório">
+									<f:selectItem noSelectionOption="true"
+										itemLabel="O animal é vacinado?" />
+									<f:selectItem itemValue="false" itemLabel="Não" />
+									<f:selectItem itemValue="true" itemLabel="Sim" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Vacina em dia" for="vacina"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="vacina" />
+								</span>
+							</div>
+						</div>
+
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material icon-left">
+								<p:calendar id="vencimentovacina"
+									value="#{cadastroAnimalMB.animal.vencimentoVacina}"
+									showOn="both" pattern="dd/MM/yyyy" locale="pt"
+									timeZone="America/Sao_Paulo">
+									<p:ajax event="dateSelect" global="false"
+										onstart="adminMaterial()" />
+								</p:calendar>
+								<p:outputLabel value="Vencimento da Vacina"
+									for="vencimentovacina" style="font-weight: bold" />
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:selectOneMenu id="carteira"
+									value="#{cadastroAnimalMB.animal.carteiraVacinacao}"
+									required="true"
+									requiredMessage="O campo 'Carteira de Vacinação' é obrigatório">
+									<f:selectItem noSelectionOption="true"
+										itemLabel="Foi apresentado a carteira de vacinação?" />
+									<f:selectItem itemValue="false" itemLabel="Não" />
+									<f:selectItem itemValue="true" itemLabel="Sim" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Carteira de Vacinação" for="carteira"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="carteira" />
+								</span>
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:selectOneMenu id="vermifugo"
+									value="#{cadastroAnimalMB.animal.vermifugos}" required="true"
+									requiredMessage="O campo 'Vermifugos' é obrigatório">
+									<f:selectItem noSelectionOption="true"
+										itemLabel="o Animal é vermifugado?" />
+									<f:selectItem itemValue="false" itemLabel="Não" />
+									<f:selectItem itemValue="true" itemLabel="Sim" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Vermifugos" for="vermifugo"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="vermifugo" />
+								</span>
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material icon-left">
+								<p:calendar id="datavermifugo"
+									value="#{cadastroAnimalMB.animal.dataVermifugos}" showOn="both"
+									pattern="dd/MM/yyyy" locale="pt" timeZone="America/Sao_Paulo">
+									<p:ajax event="dateSelect" global="false"
+										onstart="adminMaterial()" />
+								</p:calendar>
+								<p:outputLabel value="Data Vermifugação" for="datavermifugo"
+									style="font-weight: bold" />
+							</div>
+						</div>
+
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:selectOneMenu id="pulgaCarrapato"
+									value="#{cadastroAnimalMB.animal.pulgacarrapatos}"
+									required="true"
+									requiredMessage="O campo 'Pulgas e Carrapatos' é obrigatório">
+									<f:selectItem noSelectionOption="true"
+										itemLabel="O Animal foi vacinado contra pulgas e carrapatos?" />
+									<f:selectItem itemValue="false" itemLabel="Não" />
+									<f:selectItem itemValue="true" itemLabel="Sim" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Pulgas e Carrapatos" for="pulgaCarrapato"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="pulgaCarrapato" />
+								</span>
+							</div>
+						</div>
+
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material icon-left">
+								<p:calendar id="dataPulgaeCarrapato"
+									value="#{cadastroAnimalMB.animal.dataPulgaCarrapato}"
+									showOn="both" pattern="dd/MM/yyyy" locale="pt"
+									timeZone="America/Sao_Paulo">
+									<p:ajax event="dateSelect" global="false"
+										onstart="adminMaterial()" />
+								</p:calendar>
+								<p:outputLabel value="Data Pulga e Carrapato"
+									for="dataPulgaeCarrapato" style="font-weight: bold" />
+							</div>
+						</div>
+
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:selectOneMenu id="doencaexistente"
+									value="#{cadastroAnimalMB.animal.doencaPrevia}" required="true"
+									requiredMessage="O campo 'Doença préexistente' é obrigatório">
+									<f:selectItem noSelectionOption="true"
+										itemLabel="O Animal tem alguma doença?" />
+									<f:selectItem itemValue="false" itemLabel="Não" />
+									<f:selectItem itemValue="true" itemLabel="Sim" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Doença préexistente" for="doencaexistente"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message
+										for="doencaexistente" />
+								</span>
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:inputTextarea id="descricaodoenca" maxlength="100"
+									value="#{cadastroAnimalMB.animal.descricaoDoenca}" />
+								<p:outputLabel value="Descrição da Doença" for="descricaodoenca"
+									style="font-weight: bold" />
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:selectOneMenu id="medicacao"
+									value="#{cadastroAnimalMB.animal.medicacao}" required="true"
+									requiredMessage="O campo 'Medicação' é obrigatório">
+									<f:selectItem noSelectionOption="true"
+										itemLabel="O Animal faz uso de medicação?" />
+									<f:selectItem itemValue="false" itemLabel="Não" />
+									<f:selectItem itemValue="true" itemLabel="Sim" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Medicação" for="medicacao"
+									style="font-weight: bold" />
+								<span class="help-block"> <p:message for="medicacao" />
+								</span>
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:inputTextarea id="descricaomedicacao" maxlength="100"
+									value="#{cadastroAnimalMB.animal.descricaoMedicacao}" />
+								<p:outputLabel value="Descrição da Medicação"
+									for="descricaomedicacao" style="font-weight: bold" />
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+							<p:inputTextarea id="rotina" maxlength="100"
+									value="#{cadastroAnimalMB.animal.rotina}" />
+								<p:outputLabel value="Rotina" 
+								for="rotina" style="font-weight: bold"/>
+							</div>
+						</div>
+
+					</div>
+
+					<p:separator title="Em caso de Emergência" />
+					<div class="ui-g ui-fluid">
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:outputLabel value="Em caso de Emergência:" />
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material">
+								<p:inputText id="doutorE" maxlength="50"
+									value="#{cadastroAnimalMB.animal.doutorE}" />
+								<p:outputLabel value="Doutor(a) Responsavel" for="doutorE"
+									style="font-weight: bold" />
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material icon-left">
+								<p:inputMask id="telefone" mask="(99)9999-9999"
+									value="#{cadastroAnimalMB.animal.telefoneE}">
+									<i id="fa" class="fa fa-phone"
+										style="font-size: 20px; margin-top: 10px" />
+								</p:inputMask>
+								<p:outputLabel value="Telefone" for="telefone"
+									style="font-weight: bold" />
+							</div>
+						</div>
+
+						<div class="ui-g-6 ui-sm-12">
+							<div class="ui-material icon-left">
+								<p:inputMask id="celular" mask="(99)99999-9999"
+									value="#{cadastroAnimalMB.animal.celularE}">
+									<i id="fa" class="fa fa-phone"
+										style="font-size: 20px; margin-top: 10px" />
+								</p:inputMask>
+								<p:outputLabel value="Celular" for="celular"
+									style="font-weight: bold" />
+							</div>
+						</div>
+
+
+
+					</div>
+				</div>
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
